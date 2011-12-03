@@ -43,7 +43,7 @@
       ($accuracy)
       );
 
-		$result = getDBResultInserted($dbQuery);
+		$result = getDBResultInserted($dbQuery, "quizId");
 		header("Content-type: application/json");
 		echo json_encode($result);   
   }

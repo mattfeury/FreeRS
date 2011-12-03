@@ -77,7 +77,7 @@ function createQuiz(quizName, lat, long, accuracy, callback) {
     data: { name: quizName, lat: lat, long: long, accuracy: accuracy },
     type: 'POST',
     success: function(data) {
-      currentQuiz = data;
+      currentQuizId = data.quizId;
       //TODO stats
       $('#quiz_view_page')
         .find('.stat-holder').empty();
@@ -92,14 +92,13 @@ function addQuestion(quizId, numChoices, answer, start) {
     url: "api/questions",
     dataType: "json",
     async: false,
-    data: { quizID: quizId, num_choices: numChoices, correct_choice: answer },
+    data: { 'quizID': quizId, 'num_choices': numChoices, 'correct_choice': answer },
     type: 'POST',
     success: function(data) {
       //TODO start
       $('#quiz')
         .find('.question').text(++currentQuestionNum)
-        .find('.time').text('0:30')
-        .find('.numChoices').text(data['num_choices']);
+        .find('.time').text('0:30');
 
       $.mobile.changePage('#give_quiz_page');
     },
@@ -120,7 +119,7 @@ function addProduct(product) {
 }
 
 window.currentUser = null;
-window.currentQuiz = null;
+window.currentQuizId = null;
 window.currentQuestionNum = 0;
 $(function() {
   $.ajax({
@@ -185,7 +184,7 @@ $(function() {
 
   // Start quiz. Take them to create their first question
   $('#start-quiz').click(function() {
-    if (! currentQuiz || ! currentQuiz.id) {
+    if (! currentQuizId) {
       showError('No quiz selected','Or something went wrong.');
       return false;
     }
@@ -195,7 +194,7 @@ $(function() {
     //activateQuiz(currentQuiz.id, callback);
   });
   $('.add-question').click(function() {
-    if (! currentQuiz || ! currentQuiz.id) {
+    if (! currentQuizId) {
       showError('No quiz selected','Or something went wrong.');
       return false;
     }
@@ -203,7 +202,7 @@ $(function() {
         numChoices = $this.siblings('.choices').find('select').val(),
         answer = $this.siblings('.answer').find('input').val();
 
-    addQuestion(currentQuiz.id, numChoices, answer, true);
+    addQuestion(currentQuizId, numChoices, answer, true);
   });
 
 });
