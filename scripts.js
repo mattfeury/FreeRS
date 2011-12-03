@@ -52,22 +52,6 @@ function loadProduct(id) {
     error: ajaxError
   });
 }
-// Loads all the products from a category
-function loadProducts(catId) {
-  $( "#products_list" ).empty();
-  $.ajax({
-    url: "api/categories/" + catId,
-    dataType: "json",
-    async: false,
-    success: function(data) {
-      //Create The New Rows From Template
-      addProducts(data);
-      $( "#product_list_row_template" ).tmpl( data ).appendTo( "#products_list" );
-      $('#products_list').listview('refresh');
-    },
-    error: ajaxError
-  });
-}
 
 // Loads all the products for the user
 function loadUserProducts() {
@@ -85,6 +69,44 @@ function loadUserProducts() {
     error: function() { showError('No Products','You have not posted any products up!'); }
   });
 }
+function createQuiz(quizName, lat, long, accuracy, callback) {
+  $.ajax({
+    url: "api/quizzes",
+    dataType: "json",
+    async: false,
+    data: { name: quizName, lat: lat, long: long, accuracy: accuracy },
+    type: 'POST',
+    success: function(data) {
+      currentQuiz = data;
+      //TODO stats
+      $('#quiz_view_page')
+        .find('.stat-holder').empty();
+
+      callback();
+    },
+    error: ajaxError
+  });
+}
+function addQuestion(quizId, numChoices, answer, start) {
+  $.ajax({
+    url: "api/questions",
+    dataType: "json",
+    async: false,
+    data: { quizID: quizId, num_choices: numChoices, correct_choice: answer },
+    type: 'POST',
+    success: function(data) {
+      //TODO start
+      $('#quiz')
+        .find('.question').text(++currentQuestionNum)
+        .find('.time').text('0:30')
+        .find('.numChoices').text(data['num_choices']);
+
+      $.mobile.changePage('#give_quiz_page');
+    },
+    error: ajaxError
+  });
+}
+
 
 //stores our loaded products so we can cache them and not call the db all the time
 var productsById = {};
@@ -140,120 +162,50 @@ $(function() {
   });
 
 
+  // Get a name and location and create the quiz.
+  $('#make-quiz').click(function() {
+    function makeQuiz(position) {
+      var quizName = prompt('Enter Quiz Name:'),
+          lat = position.coords.latitude,
+          long = position.coords.longitude,
+          accuracy = position.coords.accuracy;
 
-  // Links to category pages should load the products
-  // and populate the template
-  $('a.category').live('click', function() {
-    var id = $(this).attr('data-id');
-    loadProducts(id);
-  });
-  
-  // Links to product pages should load the product info
-  // and populate the template
-  $('a.product').live('click', function() {	
-    var pId = $(this).attr('data-id');
-    loadProduct(pId);
-  });
-
-  // Links to edit product page should populate the template
-  // We already have the product cached
-  $('a.edit').live('click', function() {	
-    var pId = $(this).attr('data-id');
-    if (productsById[pId]) {
-      // Set the edit template with this product
-      $('#edit_product_content .product_form').empty();
-      $('#edit_product_template').tmpl( productsById[pId] ).appendTo('#edit_product_content .product_form');
-
-      // Select the right category
-      setTimeout(function() {
-        var myselect = $("#edit_product_content select");
-        var index = 0;
-        myselect.find('option').each(function(i, item) {
-          if ($(item).attr('value') == productsById[pId]['category_id'])
-            index = i;
-        });
-
-        myselect[0].selectedIndex = index;
-        myselect.selectmenu('refresh');
-      }, 0);
+      if (quizName && lat && long) {
+        console.log(quizName, lat, long);
+        var callback = function() { $.mobile.changePage('#quiz_view_page'); }
+        createQuiz(quizName, lat, long, accuracy, callback);
+      }
     }
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(makeQuiz);
+    } else {
+      showError('No location','Your browser does not support getting your location. Please try a different one, like Google Chrome');
+    }
+    return false;
   });
 
-	//Handles the add product form
-	$('#add_button').bind('click', function() {
-    var $form = $('#add_product_content'),
-        data = {
-          title: $form.find('#add_product_title').val(),
-          description: $form.find('#add_product_description').val(),
-          price: $form.find('#add_product_price').val(),
-          categoryId: $form.find('.add_product_categories').val()
-        };
-
-    if (data.title.trim() === '') {
-      showError('Product title required', 'Please insert a valid product name.');
+  // Start quiz. Take them to create their first question
+  $('#start-quiz').click(function() {
+    if (! currentQuiz || ! currentQuiz.id) {
+      showError('No quiz selected','Or something went wrong.');
       return false;
     }
-
-		$.ajax({
-			url: "api/product",
-			dataType: "json",
-	    async: false,
-			data: data,
-			type: 'POST',
-      success: function(data) {
-        //reset form
-        $form
-          .find('#add_product_title').val('').end()
-          .find('#add_product_description').val('').end()
-          .find('#add_product_price').val('').end()
-          .find('.add_product_categories').val('');
-
-        //load the new product in the template since we redirect there
-        loadProduct(data.productId);
-      },
-	    error: ajaxError
-		});
-	});
-
-  //Handles the edit product form
-  $('#edit_button').bind('click', function() {
-    var $form = $('#edit_product_content'),
-        id = $form.find('.title').attr('data-id'),
-        data = {
-          description: $form.find('#edit_product_description').val(),
-          price: $form.find('#edit_product_price').val(),
-          categoryId: $form.find('.add_product_categories').val()
-        };
     
-    $.ajax({
-      url: "api/product/" + id,
-      dataType: "json",
-      async: false,
-      data: data,
-      headers: {'X-HTTP-Method-Override': 'PUT'},
-      type: 'POST',
-      success: function(data) {
-        loadProduct(id);
-      },        
-      error: ajaxError
-		});
+    //var callback = function() { $.mobile.changePage('#add_question_page'); }
+    $.mobile.changePage('#add_question_page');
+    //activateQuiz(currentQuiz.id, callback);
   });
-  //Delete button
-	$('#remove_button').bind('click', function() {
-    if (! confirm("Really delete (cannot be undone)?"))
+  $('.add-question').click(function() {
+    if (! currentQuiz || ! currentQuiz.id) {
+      showError('No quiz selected','Or something went wrong.');
       return false;
+    }
+    var $this = $(this),
+        numChoices = $this.siblings('.choices').find('select').val(),
+        answer = $this.siblings('.answer').find('input').val();
 
-    var $form = $('#edit_product_content'),
-        id = $form.find('.title').attr('data-id');
-
-		$.ajax({
-			url: "api/product/"+id,
-			dataType: "json",
-	    async: false,
-			type: 'DELETE',
-	    error: ajaxError
-		});
-	});
+    addQuestion(currentQuiz.id, numChoices, answer, true);
+  });
 
 });
 
