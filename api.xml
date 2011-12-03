@@ -41,12 +41,12 @@
 				<exampleValue><![CDATA[28.33]]></exampleValue>
 			</param>
 			<param id='longitute'>
-				<description><![CDATA[Longitude]></description>
+				<description><![CDATA[Longitude]]></description>
 				<defaultValue><![CDATA[]]></defaultValue>
 				<exampleValue><![CDATA[40.4]]></exampleValue>
 			</param>	
 			<param id='accuracy'>
-				<description><![CDATA[Accuracy]></description>
+				<description><![CDATA[Accuracy]]></description>
 				<defaultValue><![CDATA[100]]></defaultValue>
 				<exampleValue><![CDATA[75]]></exampleValue>
 			</param>						
@@ -69,7 +69,7 @@
 				<exampleValue><![CDATA[4]]></exampleValue>
 			</param>
 			<param id='correct_choice'>
-				<description><![CDATA[Correct Answer]></description>
+				<description><![CDATA[Correct Answer]]></description>
 				<defaultValue><![CDATA[0]]></defaultValue>
 				<exampleValue><![CDATA[1]]></exampleValue>
 			</param>						
