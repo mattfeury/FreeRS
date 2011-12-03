@@ -49,9 +49,9 @@
   }
 
   function setActivateQuiz($quizID, $activate) {
-    $dbQuery = sprintf("UPDATE quizzes SET active='%s' WHERE id='%s'",
-        mysql_real_escape_string($activate),
-        mysql_real_escape_string($quizID));
+    $dbQuery = sprintf("UPDATE quizzes SET active='%d' WHERE id=%d",
+        ($activate),
+        ($quizID));
     if (getDBResultAffected($dbQuery) > 0 ) {
         echo json_encode(array('success'=> true));
     }
