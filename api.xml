@@ -53,6 +53,30 @@
 	</post>
   </command>
 
+  <command id='questions' security='public'>
+	<description><![CDATA[it's an API, bro]]></description>
+    <post>
+		<description><![CDATA[This is how you create a new quiz]]></description>	
+		<action file='questions.php'><![CDATA[addQuestion($_POST['quizID'], $_POST['num_choices'], $_POST['correct_choice']);]]></action>			
+			<param id='quizID'>
+				<description><![CDATA[Quiz ID]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA[1]]></exampleValue>
+			</param>
+			<param id='num_choices'>
+				<description><![CDATA[Number of Choices]]></description>
+				<defaultValue><![CDATA[4]]></defaultValue>
+				<exampleValue><![CDATA[4]]></exampleValue>
+			</param>
+			<param id='correct_choice'>
+				<description><![CDATA[Correct Answer]></description>
+				<defaultValue><![CDATA[0]]></defaultValue>
+				<exampleValue><![CDATA[1]]></exampleValue>
+			</param>						
+	</post>
+  </command>
+
+
   
   <!--<command id='product' security='public'>
 		<description><![CDATA[it's an API, bro]]></description>
