@@ -17,8 +17,11 @@
   </div>
 	
   <div data-role="content">
-    <a href='#give_quiz_page' data-role="button" data-transition="slide">Start Quiz</a>
+    <button id="start-quiz" data-role="button" data-transition="slide">Start Quiz</button>
     <h4>Stats?</h4>
+    <div class="stats">
+      <ol class="stat-holder"></ol>
+    </div>
 	</div>
 </div>
 <!--******************************************************************************************************************************-->
@@ -30,10 +33,38 @@
   <div data-role="content">
     <div id="quiz">
       <h2 class="question">Q1</h2>
+      <div><span class="numChoices">2</span> Choices</div>
       <div class="time">0:30</div>
       <button class="toggle">Toggle Play/Pause</button>
       <button id="add-question">Add Q</button>
     </div>
+	</div>
+</div>
+<!--******************************************************************************************************************************-->
+<div data-role="page" id="add_question_page">
+  <div data-role='header' data-position='inline' data-theme='d'>
+	  <h1>Add Question</h1>
+  </div>
+	
+  <div data-role="content">
+    <div class="choices" data-role="fieldcontain">
+      <label>Number of Choices: 
+        <select>
+          <option option="1">1</option>
+          <option option="2">2</option>
+          <option option="3">3</option>
+          <option option="4">4</option>
+          <option option="5">5</option>
+          <option option="6">6</option>
+          <option option="7">7</option>
+          <option option="8">8</option>
+        </select>
+      </label>
+    </div>
+    <div class="answer" data-role="fieldcontain">
+      <label>Answer Number (1-Number of Choices): <input type="password" /></label>
+    </div>
+    <button class="add-question" data-start="true">Add &amp; Start</button>
 	</div>
 </div>
 <!--******************************************************************************************************************************-->

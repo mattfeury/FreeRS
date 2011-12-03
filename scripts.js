@@ -120,15 +120,14 @@ function addProduct(product) {
 }
 
 window.currentUser = null;
+window.currentQuiz = null;
+window.currentQuestionNum = 0;
 $(function() {
   $.ajax({
     url: "/user",
     dataType: 'text',
     success: function(data) {
       currentUser = data;
-      var $view = $('#view_product_content');
-      if ($view.find('.contact[data-id]').attr('data-id') == data)
-        $view.find('.actions').removeClass('not-mine').addClass('mine');
     },
     error: function() { showError('Not logged in', 'You don\'t appear to be logged in'); }
   });
