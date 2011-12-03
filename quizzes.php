@@ -52,7 +52,7 @@
     $dbQuery = sprintf("UPDATE quizzes SET active='%s' WHERE id='%s'",
         mysql_real_escape_string($activate),
         mysql_real_escape_string($quizID));
-    if (is_set(getDBResultAffected($dbQuery))) {
+    if (getDBResultAffected($dbQuery) > 0 ) {
         echo json_encode(array('success'=> true))
     }
     else {
