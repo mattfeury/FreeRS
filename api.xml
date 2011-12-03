@@ -38,27 +38,33 @@
 				<exampleValue><![CDATA["Chemical Warfare"]]></exampleValue>
 			</param>
 		</post>
-    
-  </command>
-	<command id='make' security='public'>
-		<description><![CDATA[it's an API, bro]]></description>
-		
-		<index>
-			<description><![CDATA[This is how you can get a listing of all quizzes near you]]></description>
-			
-			<action file='quizzes.php'><![CDATA[makeSession();]]></action>
-    </index>
-  </command>
-	<command id='get' security='public'>
-		<description><![CDATA[it's an API, bro]]></description>
-		
-		<index>
-			<description><![CDATA[This is how you can get a listing of all quizzes near you]]></description>
-			
-			<action file='quizzes.php'><![CDATA[getSession();]]></action>
-    </index>
+    <post>
+		<description><![CDATA[This is how you create a new quiz]]></description>	
+		<action file='quizzes.php'><![CDATA[createQuiz($_POST['name'], $_POST['lat'], $_POST['long'], $_POST['accuracy']);]]></action>			
+			<param id='name'>
+				<description><![CDATA[Quiz Name]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA["Chemical Warfare"]]></exampleValue>
+			</param>
+			<param id='latitude'>
+				<description><![CDATA[Latitude]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA[28.33]]></exampleValue>
+			</param>
+			<param id='longitute'>
+				<description><![CDATA[Longitude]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA[40.4]]></exampleValue>
+			</param>	
+			<param id='accuracy'>
+				<description><![CDATA[Accuracy]></description>
+				<defaultValue><![CDATA[100]]></defaultValue>
+				<exampleValue><![CDATA[75]]></exampleValue>
+			</param>						
+	</post>
   </command>
 
+  
   <!--<command id='product' security='public'>
 		<description><![CDATA[it's an API, bro]]></description>
 		

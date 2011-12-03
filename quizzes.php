@@ -32,14 +32,15 @@
 		echo json_encode($result); 
   }
 
-  function createQuiz($name, $lat, $long) {
+  function createQuiz($name, $lat, $long, $accuracy) {
     $userId = idForCurrentUser();
     
-	$dbQuery = sprintf("INSERT INTO quizzes (user_id, name, loc_lat, loc_long) VALUES ('%s', '%s', '%s', '%s')",
+	$dbQuery = sprintf("INSERT INTO quizzes (user_id, name, loc_lat, loc_long, accuracy) VALUES ('%s', '%s', '%s', '%s', '%s')",
       mysql_real_escape_string($userId),
       mysql_real_escape_string($name)
       mysql_real_escape_string($lat),
       mysql_real_escape_string($long),
+      mysql_real_escape_string($accuracy)
       );
 
 		$result = getDBResultInserted($dbQuery);
