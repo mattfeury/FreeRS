@@ -2,14 +2,26 @@
 	include 'db_helper.php';
 
   function addQuestion($quizID, $numChoices, $correctChoice) {
-	$dbQuery = sprintf("INSERT INTO questions (quiz_id, num_choices, correct_choice) VALUES ('%s', '%s', '%s')",
-      mysql_real_escape_string($quizID),
-      mysql_real_escape_string($numChoices),
-      mysql_real_escape_string($correctChoice));
+	$dbQuery = sprintf("INSERT INTO questions (quiz_id, num_choices, correct_choice) VALUES (%d, %d, %d)",
+      ($quizID),
+      ($numChoices),
+      ($correctChoice));
 
-	$result = getDBResultInserted($dbQuery);
+	$result = getDBResultInserted($dbQuery, 'id');
 	header("Content-type: application/json");
 	echo json_encode($result); 
+
+	$dbQuery = sprintf("UPDATE quizzes SET current_question_id=%d WHERE id=%d",
+		($result['id']),
+		($quizID)
+		);
+
+    if (getDBResultAffected($dbQuery) > 0 ) {
+        echo json_encode(array('success'=> true));
+    }
+    else {
+        echo json_encode(array('success'=> false));
+    }
   }
 
 ?>
