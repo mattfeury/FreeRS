@@ -20,19 +20,6 @@
 		echo json_encode($result);
   }
 
-  function makeSession() {
-    print_r($_SESSION);
-    if(isset($_SESSION['qId']))
-      $_SESSION['qId']=$_SESSION['qId']+1;
-    else
-      $_SESSION['qId']=1;
-
-    echo "made qId=". $_SESSION['qId'];
-  }
-  function getSession() {
-    echo "qId=". $_SESSION['qId'];
-  }
-
   function addQuiz($name) {
     $userId = idForCurrentUser();
     
@@ -42,7 +29,41 @@
 
 		$result = getDBResultInserted($dbQuery);
 		header("Content-type: application/json");
-		echo json_encode($result);
+		echo json_encode($result); 
+  }
+
+  function createQuiz($name, $lat, $long) {
+    $userId = idForCurrentUser();
     
+	$dbQuery = sprintf("INSERT INTO quizzes (user_id, name, loc_lat, loc_long) VALUES ('%s', '%s', '%s', '%s')",
+      mysql_real_escape_string($userId),
+      mysql_real_escape_string($name)
+      mysql_real_escape_string($lat),
+      mysql_real_escape_string($long),
+      );
+
+		$result = getDBResultInserted($dbQuery);
+		header("Content-type: application/json");
+		echo json_encode($result);   
+  }
+
+  function setActivateQuiz($quizID, $activate) {
+    $dbQuery = sprintf("UPDATE quizzes SET active='%s' WHERE id='%s'",
+        mysql_real_escape_string($activate));
+        mysql_real_escape_string($userId));
+    if (is_set(getDBResultAffected($dbQuery))) {
+        echo json_encode(array('success'=> true))
+    }
+    else {
+        echo json_encode(array('success'=> false))
+    }
+  }
+
+  function activateQuiz($quizID) {
+    setActivateQuiz($quizID, 1);
+  }
+
+  function deactivateQuiz($quizID) {
+    setActivateQuiz($quizID, 0);
   }
 ?>
