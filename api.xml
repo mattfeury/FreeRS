@@ -28,17 +28,6 @@
 			<action file='quizzes.php'><![CDATA[listQuizzes($_REST['categories']);]]></action>
     </get>
     <post>
-			<description><![CDATA[This is how you make a new quiz]]></description>
-			
-			<action file='quizzes.php'><![CDATA[addQuiz($_POST['name']);]]></action>
-			
-			<param id='name'>
-				<description><![CDATA[Quiz Name]]></description>
-				<defaultValue><![CDATA[]]></defaultValue>
-				<exampleValue><![CDATA["Chemical Warfare"]]></exampleValue>
-			</param>
-		</post>
-    <post>
 		<description><![CDATA[This is how you create a new quiz]]></description>	
 		<action file='quizzes.php'><![CDATA[createQuiz($_POST['name'], $_POST['lat'], $_POST['long'], $_POST['accuracy']);]]></action>			
 			<param id='name'>
