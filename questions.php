@@ -17,10 +17,10 @@
 		);
 
     if (getDBResultAffected($dbQuery) > 0 ) {
-        echo json_encode(array('success'=> true));
+		echo json_encode($result); 
     }
     else {
-        echo json_encode(array('success'=> false));
+
     }
   }
 
