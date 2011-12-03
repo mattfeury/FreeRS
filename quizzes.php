@@ -53,10 +53,10 @@
         mysql_real_escape_string($activate),
         mysql_real_escape_string($quizID));
     if (getDBResultAffected($dbQuery) > 0 ) {
-        echo json_encode(array('success'=> true))
+        echo json_encode(array('success'=> true));
     }
     else {
-        echo json_encode(array('success'=> false))
+        echo json_encode(array('success'=> false));
     }
   }
 
