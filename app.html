@@ -1,0 +1,83 @@
+<div data-role="page" id="landing_page">
+    <div data-role='header' data-position='inline' data-theme='d'>
+	    <h1>FreeRS</h1>
+   	</div>
+	
+  <div data-role="content">
+    <div data-role="controlgroup">
+        <a href='#quiz_list_page' data-role="button" data-transition="slide">Take Quiz</a>
+        <a href='#quiz_view_page' data-role="button" data-transition="slide">Make Quiz</a>
+    </div>
+	</div>
+</div>
+<!--******************************************************************************************************************************-->
+<div data-role="page" id="quiz_view_page">
+  <div data-role='header' data-position='inline' data-theme='d'>
+    <h1 class="quiz-name">Quiz View</h1>
+  </div>
+	
+  <div data-role="content">
+    <a href='#give_quiz_page' data-role="button" data-transition="slide">Start Quiz</a>
+    <h4>Stats?</h4>
+	</div>
+</div>
+<!--******************************************************************************************************************************-->
+<div data-role="page" id="give_quiz_page">
+  <div data-role='header' data-position='inline' data-theme='d'>
+	  <h1>Quiz</h1>
+  </div>
+	
+  <div data-role="content">
+    <div id="quiz">
+      <h2 class="question">Q1</h2>
+      <div class="time">0:30</div>
+      <button class="toggle">Toggle Play/Pause</button>
+      <button id="add-question">Add Q</button>
+    </div>
+	</div>
+</div>
+<!--******************************************************************************************************************************-->
+<div data-role="page" id="quiz_list_page">
+	<div data-role="header" data-position="inline" data-theme='d'>
+		<a href="#landing_page" data-direction="reverse" data-icon="back" data-theme="d" data-iconpos="notext">Cancel</a>
+    <h1 class='head_title'>Take Quiz</h1>
+  </div>
+	<div data-role="content">
+    <script id="quiz-template" type="text/x-jquery-tmpl">
+      <li class="quiz"><button>${name}</button></li>
+    </script>
+    <ul id="quizzes"></ul>
+	</div>
+</div>
+<!--******************************************************************************************************************************-->
+<div data-role="page" id="take_quiz_page">
+	<div data-role="header" data-position="inline" data-theme='d'>
+		<a href="#landing_page" data-direction="reverse" data-icon="back" data-theme="d" data-iconpos="notext">Cancel</a>
+    <h1 class='head_title'>Taking Quiz</h1>
+  </div>
+  <div data-role="content">
+    <button data-answer="0">A</button>
+    <button data-answer="1">B</button>
+    <button data-answer="2">C</button>
+    <button data-answer="3">D</button>
+    <button data-answer="4">E</button>
+
+    <button id="send-answer">submit</button>
+	</div>
+</div>
+<!--******************************************************************************************************************************-->
+<div data-role="dialog" id="error_dialog" >
+	<div data-role="header" data-position="inline" data-theme='d'>
+        <h1 role="heading">Error</h1>
+    </div>
+	<div id="error_dialog_content" data-role="content">
+		<script id="error_message_template" type="text/x-jquery-tmpl">
+			<div id="error_message">
+				<center>
+            <div><h2 id="errorName">${errorName}</h2></div>
+						<div id="errorDescription">${errorDescription}</div>
+				</center>
+			</div>
+		</script>
+	</div><!-- /content -->
+</div><!-- /dialog -->

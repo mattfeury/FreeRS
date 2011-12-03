@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<api>
+	<description>
+		<![CDATA[This is an API description]]>
+	</description>
+
+  <command id='user2' security='protected'>
+		<description><![CDATA[it's an API, bro]]></description>
+		
+		<index security='protected'>
+			<description><![CDATA[current user]]></description>
+			
+			<action file='user.php'><![CDATA[jsonForCurrentUser();]]></action>
+    </index>
+  </command>
+
+	<command id='quizzes' security='public'>
+		<description><![CDATA[it's an API, bro]]></description>
+		
+		<index>
+			<description><![CDATA[This is how you can get a listing of all quizzes near you]]></description>
+			
+			<action file='quizzes.php'><![CDATA[listQuizzes();]]></action>
+    </index>
+		<get>
+			<description><![CDATA[This is how you can get a specific list of quizzes]]></description>
+			
+			<action file='quizzes.php'><![CDATA[listQuizzes($_REST['categories']);]]></action>
+    </get>
+    <post>
+			<description><![CDATA[This is how you make a new quiz]]></description>
+			
+			<action file='quizzes.php'><![CDATA[addQuiz($_POST['name']);]]></action>
+			
+			<param id='name'>
+				<description><![CDATA[Quiz Name]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA["Chemical Warfare"]]></exampleValue>
+			</param>
+		</post>
+    
+  </command>
+	<command id='make' security='public'>
+		<description><![CDATA[it's an API, bro]]></description>
+		
+		<index>
+			<description><![CDATA[This is how you can get a listing of all quizzes near you]]></description>
+			
+			<action file='quizzes.php'><![CDATA[makeSession();]]></action>
+    </index>
+  </command>
+	<command id='get' security='public'>
+		<description><![CDATA[it's an API, bro]]></description>
+		
+		<index>
+			<description><![CDATA[This is how you can get a listing of all quizzes near you]]></description>
+			
+			<action file='quizzes.php'><![CDATA[getSession();]]></action>
+    </index>
+  </command>
+
+  <!--<command id='product' security='public'>
+		<description><![CDATA[it's an API, bro]]></description>
+		
+		<index>
+			<description><![CDATA[This is how you can get a listing of all products]]></description>
+			
+			<action file='products.php'><![CDATA[listProducts();]]></action>
+		</index>
+		
+		<get>
+			<description><![CDATA[This is how you can get a specific product]]></description>
+			
+			<action file='products.php'><![CDATA[getProduct($_REST['product']);]]></action>
+		</get>
+		
+    <post>
+			<description><![CDATA[This is how you can create a product]]></description>
+			
+			<action file='products.php'><![CDATA[addProduct($_POST['title'], $_POST['description'], $_POST['price'], $_POST['categoryId']);]]></action>
+			
+			<param id='title'>
+				<description><![CDATA[Product title]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA[Algorithms by Dasgupta]]></exampleValue>
+			</param>
+			<param id='description'>
+				<description><![CDATA[Product description]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA[Textbook for CS 3510]]></exampleValue>
+			</param>
+			<param id='price'>
+				<description><![CDATA[Product price]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA[$40]]></exampleValue>
+			</param>
+			<param id='categoryId'>
+				<description><![CDATA[Category Id (must match a uniqueId in the categories table)]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA[1]]></exampleValue>
+			</param>
+		</post>
+		
+    <put>
+			<description><![CDATA[This is how you can update a product. Only the user who owns this product can update it]]></description>
+			
+			<action file='products.php'><![CDATA[updateProduct($_REST['product'], $_POST['description'], $_POST['price'], $_POST['categoryId']);]]></action>
+			
+			<param id='product-id'>
+				<description><![CDATA[Product ID (unique primary key)]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA[1]]></exampleValue>
+			</param>
+			<param id='description'>
+				<description><![CDATA[Product description]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA[Textbook for CS 3510]]></exampleValue>
+			</param>
+			<param id='price'>
+				<description><![CDATA[Product price]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA[$40]]></exampleValue>
+			</param>
+			<param id='categoryId'>
+				<description><![CDATA[Category Id (must match a uniqueId in the categories table)]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA[1]]></exampleValue>
+			</param>
+		</put>
+
+		<delete>
+			<description><![CDATA[This is how you can delete a product. Only the user who owns this can call this]]></description>
+			
+			<action file='products.php'><![CDATA[deleteProduct($_REST['product']);]]></action>
+    </delete>
+  </command>-->
+</api>

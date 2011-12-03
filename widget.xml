@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding = "utf-8" ?>
+<widget security="protected" title="Comments">
+    <library name="jquery"/>
+    <library name="jquery.tmpl"/> 
+    <library name="jquery.url"/> 
+    
+    <html file="app.html"/>
+   	<css file="styles.css"/>
+  	<javascript file="scripts.js"/>
+	
+    <library name="jquery.mobile"/> 
+    <library name="gtmob"/>
+</widget>

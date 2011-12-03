@@ -1,0 +1,15 @@
+syntax: glob
+*.ser
+*.class
+*~
+*.bak
+*.off
+*.old
+.DS_Store
+*.swo
+*.swp
+
+error_log
+
+#passwords
+db_credentials.php
