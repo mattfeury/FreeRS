@@ -20,9 +20,15 @@
     }
   }
 
-  function getCurrentQuestionForQuiz($quizID) {
-    	$dbQuery = sprintf("SELECT current_question_id FROM quizzes WHERE id=%d and active=1",
-    	  ($quizID));
+  function getCurrentQuestionForQuiz($quizID, $active) {
+    if ($active) {}
+     	$dbQuery = sprintf("SELECT current_question_id FROM quizzes WHERE id=%d and active=1",
+    	    ($quizID));
+  	  }
+  	  else {
+     	$dbQuery = sprintf("SELECT current_question_id FROM quizzes WHERE id=%d",
+      	 ($quizID));
+  	  }
     	$result = getDBResultRecord($dbQuery);
 
     if ($result == NULL) {
@@ -34,7 +40,7 @@
 
   function answerQuestion($quizID, $answer) {
     $userId = idForCurrentUser();
-    $questionID = getCurrentQuestionforQuiz($quizID);
+    $questionID = getCurrentQuestionforQuiz($quizID, true);
 
     if ($questionID == -1) {
       echo json_encode(array('success'=> false));
@@ -49,6 +55,17 @@
     	$result = getDBResultInserted($dbQuery, 'id');
     	header("Content-type: application/json");
     	echo json_encode($result); 
+  }
+
+  function getQuestionResultsForQuiz($quizID) {
+    $questionID = getCurrentQuestionforQuiz($quizID, false);
+
+    if ($questionID == -1) {
+      echo json_encode(array('success'=> false));
+      return;
+    }
+    
+    return getQuestionResults($questionID);
   }
 
   function getQuestionResults($questionID) {

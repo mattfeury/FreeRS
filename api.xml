@@ -117,6 +117,19 @@
 	</get>
   </command>
 
+  <command id='answer_rsults' security='public'>
+	<description><![CDATA[it's an API, bro]]></description>
+    <get>
+		<description><![CDATA[This is how get results for the most recently answered question.]]></description>	
+		<action file='questions.php'><![CDATA[getQuestionResultsForQuiz($_REST['quizID']);]]></action>			
+			<param id='quizID'>
+				<description><![CDATA[Quiz ID]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA[1]]></exampleValue>
+			</param>		
+	</get>
+  </command>
+
   <command id='activate_quiz' security='public'>
 	<description><![CDATA[it's an API, bro]]></description>
     <post>
