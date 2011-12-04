@@ -41,7 +41,7 @@
       return;
     }
     
-    	$dbQuery = sprintf("REPLACE answers (question_id, user_id, answer) VALUES (%d, %s, %d)",
+    	$dbQuery = sprintf("REPLACE answers (question_id, user_id, answer) VALUES (%d, '%s', %d)",
     	  ($questionID),
       mysql_real_escape_string($userId),
       ($answer));
