@@ -64,7 +64,9 @@ function addQuestion(quizId, numChoices, answer, start) {
     success: function(data) {
       $('#quiz')
         .find('.question').text(++currentQuestionNum)
-        .find('.time').text('0:30');
+        .find('.time')
+          .attr('data-seconds', defaultTimePerQuestion)
+          .text('0:' + defaultTimePerQuestion);
 
       if (start)
         activateQuiz();
@@ -97,16 +99,7 @@ function activateQuiz() {
         }
         var newTime = $quiz.find('.time').attr('data-seconds') - 1;
 
-        $quiz.find('.time')
-          .attr('data-seconds', newTime)
-          .text((newTime < 0) ? 0 : newTime);
-
-        if (newTime <= 0) {
-          $quiz.addClass('paused').removeClass('playing');
-          clearTimeout(tickerInterval);
-          deactivateQuiz();
-        }
-
+        updateTimer(newTime);
       }, 1000);
       
     },
@@ -134,6 +127,22 @@ function deactivateQuiz() {
     error: ajaxError
   });
 }
+function updateTimer(newTime) {
+  var $quiz = $('#quiz');
+
+  $quiz
+    .find('.time')
+      .attr('data-seconds', newTime)
+      .text((newTime < 0) ? 0 : newTime)
+      .siblings('.noun')
+        .text('second'.pluralize(newTime));
+
+  if (newTime <= 0) {
+    $quiz.addClass('paused').removeClass('playing');
+    clearTimeout(tickerInterval);
+    deactivateQuiz();
+  }
+}
 
 window.currentUser = null;
 window.currentQuizId = null;
@@ -153,7 +162,16 @@ $(function() {
   
   $('#quiz')
     .delegate('button.play', 'click', activateQuiz)
-    .delegate('button.pause', 'click', deactivateQuiz);
+    .delegate('button.pause', 'click', deactivateQuiz)
+    .delegate('button.more-time', 'click', function() {
+      var seconds = $('#quiz .time').attr('data-seconds');
+      updateTimer(parseInt(seconds) + 30);
+    })
+    .delegate('button.less-time', 'click', function() {
+      var seconds = $('#quiz .time').attr('data-seconds');
+      updateTimer(parseInt(seconds) - 15);      
+    })
+
 
   $('#add_question_page').bind('pagebeforeshow',function(event, ui){
     $('#add_question_page')
@@ -211,9 +229,7 @@ $(function() {
       return false;
     }
     
-    //var callback = function() { $.mobile.changePage('#add_question_page'); }
     $.mobile.changePage('#add_question_page');
-    //activateQuiz(currentQuiz.id, callback);
   });
   $('.add-question').click(function() {
     if (! currentQuizId) {
@@ -226,7 +242,10 @@ $(function() {
         answer = $page.find('.answer input').val(),
         start = $this.attr('data-start');
 
-    addQuestion(currentQuizId, numChoices, answer, start);
+    if (currentQuizId && numChoices && answer)
+      addQuestion(currentQuizId, numChoices, answer, start);
+    else
+      showError('Error', 'You must select a number of choices and answer');
   });
 
 });
@@ -234,7 +253,6 @@ $(function() {
 /******************************************************************************/
 
 function ajaxError(jqXHR, textStatus, errorThrown){
-	console.log('ajaxError '+textStatus+' '+errorThrown);
 	showError(textStatus, errorThrown);
 }
 
@@ -247,4 +265,14 @@ function showError(name, description) {
 		changeHash: false
 	});
 
+}
+
+/**
+ * Pluralize helper function for strings
+ */
+String.prototype.pluralize = function(count, plural) {
+  if (! plural)
+    plural = this + 's';
+
+  return (count == 1 ? this : plural).toString()
 }
