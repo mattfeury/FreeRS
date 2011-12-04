@@ -144,22 +144,42 @@ function updateTimer(newTime) {
     deactivateQuiz();
   }
 }
+function getQuizzesNear(lat, long, accuracy) {
+  $.ajax({
+    url: "api/quizzes",
+    dataType: "json",
+    async: false,
+    data: { 'lat': lat, 'long': long, 'accuracy': accuracy },
+    type: 'POST',
+    success: function(data) {
+      console.log(data);
+      $.each(data || [], function(i, item) {
+        $( "#quiz-template" ).tmpl( item ).appendTo( "#quizzes" );
+      });
+      $.mobile.changePage('#quiz_list_page');
+    },
+    error: ajaxError
+  });
+}
+
 
 window.currentUser = null;
 window.currentQuizId = null;
 window.currentQuestionNum = 0;
 window.tickerInterval = -1;
+window.position = null;
 
 var defaultTimePerQuestion = 30;
 $(function() {
-  $.ajax({
-    url: "/user",
-    dataType: 'text',
-    success: function(data) {
-      currentUser = data;
-    },
-    error: function() { showError('Not logged in', 'You don\'t appear to be logged in'); }
-  });
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        window.position = position;
+      });
+    } else {
+      showError('No location','Your browser does not support getting your location. Please try a different one, like Google Chrome');
+    }
+  }
   
   $('#quiz')
     .delegate('button.play', 'click', activateQuiz)
@@ -203,23 +223,31 @@ $(function() {
 
   // Get a name and location and create the quiz.
   $('#make-quiz').click(function() {
-    function makeQuiz(position) {
-      var quizName = prompt('Enter Quiz Name:'),
-          lat = position.coords.latitude,
-          long = position.coords.longitude,
-          accuracy = position.coords.accuracy;
+    if (! position) {
+      getLocation();
+      return false;
+    }
+    var quizName = prompt('Enter Quiz Name:'),
+        lat = position.coords.latitude,
+        long = position.coords.longitude,
+        accuracy = position.coords.accuracy;
 
-      if (quizName && lat && long) {
-        console.log(quizName, lat, long);
-        var callback = function() { $.mobile.changePage('#quiz_view_page'); }
-        createQuiz(quizName, lat, long, accuracy, callback);
-      }
+    if (quizName && lat && long) {
+      var callback = function() { $.mobile.changePage('#quiz_view_page'); }
+      createQuiz(quizName, lat, long, accuracy, callback);
     }
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(makeQuiz);
-    } else {
-      showError('No location','Your browser does not support getting your location. Please try a different one, like Google Chrome');
+    return false;
+  });
+  $('#take-quiz').click(function() {
+    if (! position) {
+      getLocation();
+      return false;
     }
+    var lat = position.coords.latitude,
+        long = position.coords.longitude,
+        accuracy = position.coords.accuracy;
+    
+    getQuizzesNear(lat, long, accuracy);
     return false;
   });
 
