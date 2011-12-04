@@ -21,20 +21,29 @@
   }
 
   function getCurrentQuestionForQuiz($quizID) {
-    	$dbQuery = sprintf("SELECT current_question_id FROM quizzes WHERE id=%d",
+    	$dbQuery = sprintf("SELECT current_question_id FROM quizzes WHERE id=%d and active=1",
     	  ($quizID));
-    return getDBResultRecord($dbQuery)['current_question_id'];
+    	$result = getDBResultRecord($dbQuery);
+
+    if ($result == NULL) {
+      return -1;
+    }
+
+    return $result['current_question_id'];
   }
 
   function answerQuestion($quizID, $answer) {
     $userId = idForCurrentUser();
     $questionID = getCurrentQuestionforQuiz($quizID);
+
+    if ($questionID == -1) {
+      echo json_encode(array('success'=> false));
+      return;
+    }
     
-    	$dbQuery = sprintf("INSERT INTO answers (question_id, user_id, answer) VALUES (%d, %d, %d)
-    	                    ON DUPLICATE KEY UPDATE answer=%d",
+    	$dbQuery = sprintf("REPLACE answers (question_id, user_id, answer) VALUES (%d, %d, %d)",
     	  ($questionID),
       ($userId),
-      ($answer),
       ($answer));
     	$result = getDBResultInserted($dbQuery, 'id');
     	header("Content-type: application/json");
