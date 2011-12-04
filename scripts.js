@@ -159,6 +159,7 @@ $(function() {
       showError('No location','Your browser does not support getting your location. Please try a different one, like Google Chrome');
     }
   }
+  getLocation();
   
   $('#quiz')
     .delegate('button.play', 'click', activateQuiz)
