@@ -41,9 +41,10 @@
       return;
     }
     
-    	$dbQuery = sprintf("REPLACE answers (question_id, user_id, answer) VALUES (%d, '%s', %d)",
+    	$dbQuery = sprintf("INSERT INTO answers (question_id, user_id, answer) VALUES (%d, '%s', %d) ON DUPLICATE KEY UPDATE answer=%d",
     	  ($questionID),
       mysql_real_escape_string($userId),
+      ($answer),
       ($answer));
     	$result = getDBResultInserted($dbQuery, 'id');
     	header("Content-type: application/json");
