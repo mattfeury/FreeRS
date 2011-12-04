@@ -2,6 +2,7 @@
  * Ajax functions for loading things from the API and setting the appropriate templates
  */
 function createQuiz(quizName, lat, long, accuracy, callback) {
+  $.mobile.showPageLoadingMsg();
   $.ajax({
     url: "api/quizzes",
     dataType: "json",
@@ -10,6 +11,7 @@ function createQuiz(quizName, lat, long, accuracy, callback) {
     headers: {'X-HTTP-Method-Override': 'PUT'},
     type: 'POST',
     success: function(data) {
+      $.mobile.hidePageLoadingMsg();
       currentQuizId = data.quizId;
       //TODO stats
       $('#quiz_view_page')
@@ -21,6 +23,7 @@ function createQuiz(quizName, lat, long, accuracy, callback) {
   });
 }
 function addQuestion(quizId, numChoices, answer, start) {
+  $.mobile.showPageLoadingMsg();
   $.ajax({
     url: "api/questions",
     dataType: "json",
@@ -28,6 +31,7 @@ function addQuestion(quizId, numChoices, answer, start) {
     data: { 'quizID': quizId, 'numChoices': numChoices, 'correctChoice': answer },
     type: 'POST',
     success: function(data) {
+      $.mobile.hidePageLoadingMsg();
       $('#quiz')
         .find('.question').text(++currentQuestionNum)
         .find('.time')
@@ -110,6 +114,7 @@ function updateTimer(newTime) {
   }
 }
 function getQuizzesNear(lat, long, accuracy) {
+  $.mobile.showPageLoadingMsg();
   $.ajax({
     url: "api/quizzes",
     dataType: "json",
@@ -117,6 +122,7 @@ function getQuizzesNear(lat, long, accuracy) {
     data: { 'lat': lat, 'long': long, 'accuracy': accuracy },
     type: 'POST',
     success: function(data) {
+      $.mobile.hidePageLoadingMsg();
       $('#quizzes').empty();
       $.each(data || [], function(i, item) {
         $( "#quiz-template" ).tmpl( item ).appendTo( "#quizzes" );
@@ -128,6 +134,7 @@ function getQuizzesNear(lat, long, accuracy) {
   });
 }
 function sendAnswer(answer) {
+  $.mobile.showPageLoadingMsg();
   $.ajax({
     url: "api/answers",
     dataType: "json",
@@ -135,6 +142,7 @@ function sendAnswer(answer) {
     data: { 'quizID': currentQuizId, 'answer': answer },
     type: 'POST',
     success: function(data) {
+      $.mobile.hidePageLoadingMsg();
       alert('Submitted');
     },
     error: ajaxError
