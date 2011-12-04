@@ -41,9 +41,9 @@
       return;
     }
     
-    	$dbQuery = sprintf("REPLACE answers (question_id, user_id, answer) VALUES (%d, %d, %d)",
+    	$dbQuery = sprintf("REPLACE answers (question_id, user_id, answer) VALUES (%d, %s, %d)",
     	  ($questionID),
-      ($userId),
+      mysql_real_escape_string($userId),
       ($answer));
     	$result = getDBResultInserted($dbQuery, 'id');
     	header("Content-type: application/json");
