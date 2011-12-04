@@ -51,4 +51,12 @@
     	echo json_encode($result); 
   }
 
+  function getQuestionResults($questionID) {
+    $dbQuery = sprintf("SELECT answer, COUNT(*) FROM answers WHERE question_id=%d GROUP BY answer",
+      ($questionID));
+    	$result = getDBResultsArray($dbQuery, 'id');
+    	header("Content-type: application/json");
+    	echo json_encode($result); 
+  }
+
 ?>

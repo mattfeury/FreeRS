@@ -93,7 +93,7 @@
   <command id='answers' security='public'>
 	<description><![CDATA[it's an API, bro]]></description>
     <post>
-		<description><![CDATA[This is how you create a new question]]></description>	
+		<description><![CDATA[This is how you answer a question]]></description>	
 		<action file='questions.php'><![CDATA[answerQuestion($_POST['quizID'], $_POST['answer']);]]></action>			
 			<param id='quizID'>
 				<description><![CDATA[Quiz ID]]></description>
@@ -106,6 +106,15 @@
 				<exampleValue><![CDATA[1]]></exampleValue>
 			</param>				
 	</post>
+    <get>
+		<description><![CDATA[This is how get the results to an answered question.]]></description>	
+		<action file='questions.php'><![CDATA[getQuestionResults($_REST['questionID']);]]></action>			
+			<param id='questionID'>
+				<description><![CDATA[Question ID]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA[1]]></exampleValue>
+			</param>		
+	</get>
   </command>
 
   <command id='activate_quiz' security='public'>
