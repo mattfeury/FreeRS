@@ -11,7 +11,7 @@
 	</div>
 </div>
 <!--******************************************************************************************************************************-->
-<div data-role="page" id="quiz_view_page">
+<div class="needs-state" data-role="page" id="quiz_view_page">
   <div data-role='header' data-position='inline' data-theme='d'>
     <h1 class="quiz-name">Quiz View</h1>
   </div>
@@ -25,23 +25,27 @@
 	</div>
 </div>
 <!--******************************************************************************************************************************-->
-<div data-role="page" id="give_quiz_page">
+<div class="needs-state" data-role="page" id="give_quiz_page">
   <div data-role='header' data-position='inline' data-theme='d'>
 	  <h1>Quiz</h1>
   </div>
 	
   <div data-role="content">
     <div id="quiz">
-      <h2 class="question">Q1</h2>
-      <div><span class="numChoices">2</span> Choices</div>
-      <div class="time">0:30</div>
-      <button class="toggle">Toggle Play/Pause</button>
-      <button id="add-question">Add Q</button>
+      <h2 class="question">1</h2>
+      <div><span class="time" data-seconds="30">30</span> seconds remaining</div>
+      <div class="play">
+        <button class="play">play</button>
+      </div>
+      <div class="pause">
+        <button class="pause">pause</button>
+      </div>
+      <a href='#add_question_page' data-role="button" data-transition="slide">Add Question</a>
     </div>
 	</div>
 </div>
 <!--******************************************************************************************************************************-->
-<div data-role="page" id="add_question_page">
+<div class="needs-state" data-role="page" id="add_question_page">
   <div data-role='header' data-position='inline' data-theme='d'>
 	  <h1>Add Question</h1>
   </div>
@@ -64,6 +68,7 @@
     <div class="answer" data-role="fieldcontain">
       <label>Answer Number (1-Number of Choices): <input type="password" /></label>
     </div>
+    <!--<button class="add-question">Add</button>-->
     <button class="add-question" data-start="true">Add &amp; Start</button>
 	</div>
 </div>
@@ -81,7 +86,7 @@
 	</div>
 </div>
 <!--******************************************************************************************************************************-->
-<div data-role="page" id="take_quiz_page">
+<div class="needs-state" data-role="page" id="take_quiz_page">
 	<div data-role="header" data-position="inline" data-theme='d'>
 		<a href="#landing_page" data-direction="reverse" data-icon="back" data-theme="d" data-iconpos="notext">Cancel</a>
     <h1 class='head_title'>Taking Quiz</h1>

@@ -57,7 +57,7 @@
 	<description><![CDATA[it's an API, bro]]></description>
     <post>
 		<description><![CDATA[This is how you create a new question]]></description>	
-		<action file='questions.php'><![CDATA[addQuestion($_POST['quizID'], $_POST['num_choices'], $_POST['correct_choice']);]]></action>			
+		<action file='questions.php'><![CDATA[addQuestion($_POST['quizID'], $_POST['numChoices'], $_POST['correctChoice']);]]></action>			
 			<param id='quizID'>
 				<description><![CDATA[Quiz ID]]></description>
 				<defaultValue><![CDATA[]]></defaultValue>
@@ -76,11 +76,11 @@
 	</post>
   </command>
 
-  <command id='activate_question' security='public'>
+  <command id='activate_quiz' security='public'>
 	<description><![CDATA[it's an API, bro]]></description>
     <post>
-		<description><![CDATA[This is how you activate a question]]></description>	
-		<action file='quizzes.php'><![CDATA[activateQuestion($_POST['quizID']);]]></action>			
+		<description><![CDATA[This is how you activate a quiz]]></description>	
+		<action file='quizzes.php'><![CDATA[activateQuiz($_POST['quizID']);]]></action>			
 			<param id='quizID'>
 				<description><![CDATA[Quiz ID]]></description>
 				<defaultValue><![CDATA[]]></defaultValue>
@@ -89,11 +89,11 @@
 	</post>
   </command>
 
-  <command id='deactivate_question' security='public'>
+  <command id='deactivate_quiz' security='public'>
 	<description><![CDATA[it's an API, bro]]></description>
     <post>
-		<description><![CDATA[This is how you deactivate a question]]></description>	
-		<action file='quizzes.php'><![CDATA[deactivateQuestion($_POST['quizID']);]]></action>			
+		<description><![CDATA[This is how you deactivate a quiz]]></description>	
+		<action file='quizzes.php'><![CDATA[deactivateQuiz($_POST['quizID']);]]></action>			
 			<param id='quizID'>
 				<description><![CDATA[Quiz ID]]></description>
 				<defaultValue><![CDATA[]]></defaultValue>

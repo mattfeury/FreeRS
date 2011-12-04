@@ -1,5 +1,4 @@
 #error_message { color: #CD5555 }
-.actions > a, .actions > button, .actions > div { display: none; }
-.actions.mine > .edit { display: block; }
-.actions.not-mine > div { display: block; }
-.price:before { content: '$' }
+
+#quiz.playing .play, #quiz.paused .pause { display: none; }
+#quiz.paused .play, #quiz.playing .pause { display: block; }

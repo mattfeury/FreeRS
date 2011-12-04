@@ -2,13 +2,7 @@
  * Ajax functions for loading things from the API and setting the appropriate templates
  */
 
-// Categories array of {id, name} json objects
-var categoriesLoaded = false,
-    categoriesById = {};
 function loadCategoriesIfNeeded() {
-  if (categoriesLoaded) return false;
-
-  $('.add_product_categories, #categories_list').empty();
 
   $.ajax({
     url: "api/categories",
@@ -17,37 +11,10 @@ function loadCategoriesIfNeeded() {
     success: function(data) {
       categoriesLoaded = true;
 
-      $.each(data, function(i, item) {
-        categoriesById[item.id] = item;
-      });
-
       // template on create product page
       $( "#category_option_template" ).tmpl( data ).appendTo( ".add_product_categories" );
       // template on list categories page
       $( "#category_list_row_template" ).tmpl( data ).appendTo( "#categories_list" );
-      setTimeout(function() {
-        var myselect = $("select.add_product_categories");
-
-        for(var i = 0; i < myselect.length; i++)
-          myselect[i].selectedIndex = 0;
-
-      }, 0);
-    },
-    error: ajaxError
-  });
-}
-// Loads a given product with id = id
-function loadProduct(id) {
-  $( "#view_product_content" ).empty();    
-  $.ajax({
-    url: "api/product/" + id,
-    dataType: "json",
-    async: false,
-    success: function(data, textStatus, jqXHR) {
-      //Create The New Rows From Template
-      addProduct(data);
-      $( "#product_template" ).tmpl( data ).appendTo( "#view_product_content" );
-      $('#view_product_content').trigger('create');
     },
     error: ajaxError
   });
@@ -92,35 +59,88 @@ function addQuestion(quizId, numChoices, answer, start) {
     url: "api/questions",
     dataType: "json",
     async: false,
-    data: { 'quizID': quizId, 'num_choices': numChoices, 'correct_choice': answer },
+    data: { 'quizID': quizId, 'numChoices': numChoices, 'correctChoice': answer },
     type: 'POST',
     success: function(data) {
-      //TODO start
       $('#quiz')
         .find('.question').text(++currentQuestionNum)
         .find('.time').text('0:30');
+
+      if (start)
+        activateQuiz();
 
       $.mobile.changePage('#give_quiz_page');
     },
     error: ajaxError
   });
 }
+function activateQuiz() {
+  if (! currentQuizId) return false;
 
+  $.ajax({
+    url: "api/activate_quiz",
+    dataType: "json",
+    async: false,
+    data: { 'quizID': currentQuizId },
+    type: 'POST',
+    success: function(data) {
+      $('#quiz')
+        .removeClass('paused')
+        .addClass('playing');
+    
+      //start timer
+      tickerInterval = setInterval(function() {
+        var $quiz = $('#quiz');
+        if ($quiz.is('.paused')) {
+          clearTimeout(tickerInterval);
+          return false;
+        }
+        var newTime = $quiz.find('.time').attr('data-seconds') - 1;
 
-//stores our loaded products so we can cache them and not call the db all the time
-var productsById = {};
-function addProducts(products) {
-  $.each(products, function(i, item) {
-    addProduct(item);
+        $quiz.find('.time')
+          .attr('data-seconds', newTime)
+          .text((newTime < 0) ? 0 : newTime);
+
+        if (newTime <= 0) {
+          $quiz.addClass('paused').removeClass('playing');
+          clearTimeout(tickerInterval);
+          deactivateQuiz();
+        }
+
+      }, 1000);
+      
+    },
+    error: ajaxError
   });
 }
-function addProduct(product) {
-  productsById[product.id] = product;
+function deactivateQuiz() {
+  if (! currentQuizId) return false;
+
+  var $quiz = $('#quiz');
+  if ($quiz.is('.playing')) {
+    $quiz.addClass('paused').removeClass('playing');
+  }
+  clearTimeout(tickerInterval);
+
+  $.ajax({
+    url: "api/deactivate_quiz",
+    dataType: "json",
+    async: false,
+    data: { 'quizID': currentQuizId },
+    type: 'POST',
+    success: function(data) {
+      console.log("deact"); 
+    },
+    error: ajaxError
+  });
 }
 
 window.currentUser = null;
 window.currentQuizId = null;
 window.currentQuestionNum = 0;
+window.tickerInterval = -1;
+
+var defaultTimePerQuestion = 30;
 $(function() {
   $.ajax({
     url: "/user",
@@ -131,34 +151,36 @@ $(function() {
     error: function() { showError('Not logged in', 'You don\'t appear to be logged in'); }
   });
   
-  // Load categories if we need
-  $('#list_categories_page').bind('pagebeforeshow',function(event, ui){
-    loadCategoriesIfNeeded();
-    $('#categories_list').listview('refresh');
+  $('#quiz')
+    .delegate('button.play', 'click', activateQuiz)
+    .delegate('button.pause', 'click', deactivateQuiz);
+
+  $('#add_question_page').bind('pagebeforeshow',function(event, ui){
+    $('#add_question_page')
+      .find('.answer input')
+        .val('');
   });
+  // If we are in app and no current quiz is defined, we cannot render.
+  // Bring back to landing.
+  //
+  // This'll help when people "refresh" or go directly to a page. Since we
+  // have to do tricky things with user's state, we need them to go through the flow
+  $('.needs-state').bind('pagebeforeshow',function(event, ui){
+    if (! currentQuizId)
+      $.mobile.changePage('#landing_page');      
+  });
+
   
-	//Load categories before viewing add product page for the first time
-	$('#add_product_page, #edit_product_page').bind('pagebeforeshow', function() {
-    loadCategoriesIfNeeded();
-    $(this).find('select.add_product_categories').selectmenu('refresh');
+  // Before viewing the Professor's give quiz page, reset default values
+	$('#give_quiz_page').bind('pagebeforeshow', function() {
+    $('#give_quiz_page')
+      .find('.time')
+        .text(defaultTimePerQuestion)
+        .attr('data-seconds', defaultTimePerQuestion)
+      .end()
+      .find('.question')
+        .text(currentQuestionNum);
 	});
-
-	$('#view_product_page').bind('pagebeforeshow', function() {
-    //we can't always count on getting the id from the url since
-    //sometimes jQuery doesn't update it, so we mostly rely on the link clicked
-    //if, however, we navigate direct to the page, no link was clicked so we'll need
-    //to load from the url
-    var idFromUrl = location.hash.split('=').pop();
-    if (! $('#view_product_content').children().length && idFromUrl)
-      loadProduct(idFromUrl);
-	});
-  $('#list_products_page').bind('pagebeforeshow',function(event, ui){
-    // same nastiness as above
-    var idFromUrl = location.hash.split('=').pop();
-    if (! $('#products_list').children().length && idFromUrl)
-      loadProducts(idFromUrl);
-  });
-
 
   // Get a name and location and create the quiz.
   $('#make-quiz').click(function() {
@@ -199,10 +221,12 @@ $(function() {
       return false;
     }
     var $this = $(this),
-        numChoices = $this.siblings('.choices').find('select').val(),
-        answer = $this.siblings('.answer').find('input').val();
+        $page = $this.closest('#add_question_page'),
+        numChoices = $page.find('.choices select').val(),
+        answer = $page.find('.answer input').val(),
+        start = $this.attr('data-start');
 
-    addQuestion(currentQuizId, numChoices, answer, true);
+    addQuestion(currentQuizId, numChoices, answer, start);
   });
 
 });

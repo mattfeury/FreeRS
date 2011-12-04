@@ -20,18 +20,6 @@
 		echo json_encode($result);
   }
 
-  function addQuiz($name) {
-    $userId = idForCurrentUser();
-    
-		$dbQuery = sprintf("INSERT INTO quizzes (user_id, name) VALUES ('%s', '%s')",
-      mysql_real_escape_string($userId),
-      mysql_real_escape_string($name));
-
-		$result = getDBResultInserted($dbQuery);
-		header("Content-type: application/json");
-		echo json_encode($result); 
-  }
-
   function createQuiz($name, $lat, $long, $accuracy) {
     $userId = idForCurrentUser();
     
