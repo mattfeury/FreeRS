@@ -16,6 +16,7 @@
         foreach ($result as $row) {
             $distance = getDistance($lat, $long, $row["loc_lat"], $row["loc_long"]);
             if ($distance < $proximity) {
+                $row['distance'] = $distance;
                 $quizzes[] = $row;
             }
         }
@@ -24,8 +25,15 @@
 		echo json_encode($quizzes);
   }
 
-  function getDistance($lat1, $long1, $lat2, $long2) {
-    return sqrt( pow(($lat1 * $lat2), 2) - pow(($long1 * $long2), 2) );
+  function getDistance($lat1, $lon1, $lat2, $lon2) {
+    $theta = $lon1 - $lon2;
+    $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+    $dist = acos($dist);
+    $dist = rad2deg($dist);
+    $miles = $dist * 60 * 1.1515;
+
+    // meters
+    return ($miles * 1.609344) * 1000;
   }
 
   function createQuiz($name, $lat, $long, $accuracy) {
