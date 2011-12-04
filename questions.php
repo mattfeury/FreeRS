@@ -30,9 +30,11 @@
     $userId = idForCurrentUser();
     $questionID = getCurrentQuestionforQuiz($quizID);
     
-    	$dbQuery = sprintf("INSERT INTO answers (question_id, user_id, answer) VALUES (%d, %d, %d)",
+    	$dbQuery = sprintf("INSERT INTO answers (question_id, user_id, answer) VALUES (%d, %d, %d)
+    	                    ON DUPLICATE KEY UPDATE answer=%d",
     	  ($questionID),
       ($userId),
+      ($answer),
       ($answer));
     	$result = getDBResultInserted($dbQuery, 'id');
     	header("Content-type: application/json");
