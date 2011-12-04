@@ -21,11 +21,11 @@
   }
 
   function listQuizzesWithinProximity($lat, $long, $accuracy, $proximity) {
-		$dbQuery = sprintf("SELECT * FROM quizzes");
+		$dbQuery = sprintf("SELECT * FROM quizzes WHERE active = 1");
 		$result = getDBResultsArray($dbQuery);
         $quizzes = array();
         
-        foreach ($result as &$row) {
+        foreach ($result as $row) {
             $distance = getDistance($lat, $long, $row["loc_lat"], $row["loc_long"]);
             if ($distance < $proximity) {
                 $quizzes[] = $row;
@@ -38,18 +38,6 @@
 
   function getDistance($lat1, $long1, $lat2, $long2) {
     return sqrt( pow(($lat1 * $lat2), 2) - pow(($long1 * $long2), 2) );
-  }
-
-  function addQuiz($name) {
-    $userId = idForCurrentUser();
-    
-		$dbQuery = sprintf("INSERT INTO quizzes (user_id, name) VALUES ('%s', '%s')",
-      mysql_real_escape_string($userId),
-      mysql_real_escape_string($name));
-
-		$result = getDBResultInserted($dbQuery);
-		header("Content-type: application/json");
-		echo json_encode($result); 
   }
 
   function createQuiz($name, $lat, $long, $accuracy) {
