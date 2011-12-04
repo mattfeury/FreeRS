@@ -117,7 +117,7 @@
 	</post>
     <get>
 		<description><![CDATA[This is how get the results to an answered question.]]></description>	
-		<action file='questions.php'><![CDATA[getQuestionResults($_REST['questionID']);]]></action>			
+		<action file='questions.php'><![CDATA[getQuestionResults($_REST['answers']);]]></action>			
 			<param id='questionID'>
 				<description><![CDATA[Question ID]]></description>
 				<defaultValue><![CDATA[]]></defaultValue>
@@ -130,7 +130,7 @@
 	<description><![CDATA[it's an API, bro]]></description>
     <get>
 		<description><![CDATA[This is how get results for the most recently answered question.]]></description>	
-		<action file='questions.php'><![CDATA[getQuestionResultsForQuiz($_REST['quizID']);]]></action>			
+		<action file='questions.php'><![CDATA[getQuestionResultsForQuiz($_REST['answer_results']);]]></action>			
 			<param id='quizID'>
 				<description><![CDATA[Quiz ID]]></description>
 				<defaultValue><![CDATA[]]></defaultValue>

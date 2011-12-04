@@ -34,15 +34,15 @@
   }
 
   function getCurrentQuestionForQuiz($quizID, $active) {
-    if ($active) {}
+    if ($active) {
      	$dbQuery = sprintf("SELECT current_question_id FROM quizzes WHERE id=%d and active=1",
     	    ($quizID));
   	  }
-  	  else {
+  	else {
      	$dbQuery = sprintf("SELECT current_question_id FROM quizzes WHERE id=%d",
       	 ($quizID));
-  	  }
-    	$result = getDBResultRecord($dbQuery);
+  	}
+    $result = getDBResultRecord($dbQuery);
 
     if ($result == NULL) {
       return -1;
@@ -82,12 +82,12 @@
   }
 
   function getQuestionResults($questionID) {
-    $dbQuery = sprintf("SELECT answer, COUNT(*) FROM answers WHERE question_id=%d GROUP BY answer",
+    $dbQuery = sprintf("SELECT answer, COUNT(*) as count FROM answers WHERE question_id=%d GROUP BY answer",
       ($questionID));
-    	$result = getDBResultsArray($dbQuery, 'id');
-    $result = array_merge(getQuestion($questionID), $result);
-    	header("Content-type: application/json");
-    	echo json_encode($result); 
+    $result = getDBResultsArray($dbQuery);
+    $result = array_merge(getQuestion($questionID), array("answers" => $result));
+    header("Content-type: application/json");
+    echo json_encode($result); 
   }
 
 ?>
