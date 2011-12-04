@@ -60,6 +60,7 @@ function addQuestion(quizId, numChoices, answer, start) {
     dataType: "json",
     async: false,
     data: { 'quizID': quizId, 'numChoices': numChoices, 'correctChoice': answer },
+    headers: {'X-HTTP-Method-Override': 'PUT'},
     type: 'POST',
     success: function(data) {
       $('#quiz')
