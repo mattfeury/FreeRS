@@ -18,16 +18,30 @@
 		<description><![CDATA[it's an API, bro]]></description>
 		
 		<index>
-			<description><![CDATA[This is how you can get a listing of all quizzes near you]]></description>
+			<description><![CDATA[This is how you can get a listing of all quizzes]]></description>
 			
 			<action file='quizzes.php'><![CDATA[listQuizzes();]]></action>
     </index>
-		<get>
-			<description><![CDATA[This is how you can get a specific list of quizzes]]></description>
-			
-			<action file='quizzes.php'><![CDATA[listQuizzes($_REST['categories']);]]></action>
-    </get>
-    <post>
+		<post>
+			<description><![CDATA[This is how you can get a list of quizzes near you]]></description>
+			<action file='quizzes.php'><![CDATA[listQuizzesWithinProximity($_POST['lat'], $_POST['long'], $_POST['accuracy'], 1000);]]></action>
+			<param id='latitude'>
+				<description><![CDATA[Latitude]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA[28.33]]></exampleValue>
+			</param>
+			<param id='longitute'>
+				<description><![CDATA[Longitude]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA[40.4]]></exampleValue>
+			</param>	
+			<param id='accuracy'>
+				<description><![CDATA[Accuracy]]></description>
+				<defaultValue><![CDATA[100]]></defaultValue>
+				<exampleValue><![CDATA[75]]></exampleValue>
+			</param>				
+    		</post>
+    <put>
 		<description><![CDATA[This is how you create a new quiz]]></description>	
 		<action file='quizzes.php'><![CDATA[createQuiz($_POST['name'], $_POST['lat'], $_POST['long'], $_POST['accuracy']);]]></action>			
 			<param id='name'>
@@ -50,7 +64,7 @@
 				<defaultValue><![CDATA[100]]></defaultValue>
 				<exampleValue><![CDATA[75]]></exampleValue>
 			</param>						
-	</post>
+	</put>
   </command>
 
   <command id='questions' security='public'>
