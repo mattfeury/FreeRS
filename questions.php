@@ -20,6 +20,19 @@
     }
   }
 
+  function getQuestionInformation($questionID) {
+    	$result = getQuestion($questionID);
+    	header("Content-type: application/json");
+    	echo json_encode($result); 
+  }
+
+  function getQuestion($questionID) {
+    $dbQuery = sprintf("SELECT num_choices, correct_choice FROM questions WHERE id=%d",
+      ($questionID)
+      );
+    return getDBResultRecord($dbQuery);
+  }
+
   function getCurrentQuestionForQuiz($quizID, $active) {
     if ($active) {}
      	$dbQuery = sprintf("SELECT current_question_id FROM quizzes WHERE id=%d and active=1",
@@ -72,6 +85,7 @@
     $dbQuery = sprintf("SELECT answer, COUNT(*) FROM answers WHERE question_id=%d GROUP BY answer",
       ($questionID));
     	$result = getDBResultsArray($dbQuery, 'id');
+    $result = array_merge(getQuestion($questionID), result);
     	header("Content-type: application/json");
     	echo json_encode($result); 
   }

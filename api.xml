@@ -88,6 +88,15 @@
 				<exampleValue><![CDATA[1]]></exampleValue>
 			</param>						
 	</post>
+    <get>
+		<description><![CDATA[This is how you get information about a question.]]></description>	
+		<action file='questions.php'><![CDATA[getQuestionInformation($_REST['questionID']);]]></action>			
+			<param id='questionID'>
+				<description><![CDATA[Question ID]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA[1]]></exampleValue>
+			</param>		
+	</get>
   </command>
 
   <command id='answers' security='public'>
