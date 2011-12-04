@@ -90,12 +90,12 @@
 	</post>
   </command>
 
-  <command id='answer_question' security='public'>
+  <command id='answers' security='public'>
 	<description><![CDATA[it's an API, bro]]></description>
     <post>
 		<description><![CDATA[This is how you create a new question]]></description>	
-		<action file='questions.php'><![CDATA[answerQuestion($_POST['questionID'], $_POST['answer']);]]></action>			
-			<param id='questionID'>
+		<action file='questions.php'><![CDATA[answerQuestion($_POST['quizID'], $_POST['answer']);]]></action>			
+			<param id='quizID'>
 				<description><![CDATA[Quiz ID]]></description>
 				<defaultValue><![CDATA[]]></defaultValue>
 				<exampleValue><![CDATA[1]]></exampleValue>

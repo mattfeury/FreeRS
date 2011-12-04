@@ -20,8 +20,16 @@
     }
   }
 
-  function answerQuestion($questionID, $answer) {
+  function getCurrentQuestionForQuiz($quizID) {
+    	$dbQuery = sprintf("SELECT current_question_id FROM quizzes WHERE id=%d",
+    	  ($quizID));
+    return getDBResultRecord($dbQuery)['current_question_id'];
+  }
+
+  function answerQuestion($quizID, $answer) {
     $userId = idForCurrentUser();
+    $questionID = getCurrentQuestionforQuiz($quizID);
+    
     	$dbQuery = sprintf("INSERT INTO answers (question_id, user_id, answer) VALUES (%d, %d, %d)",
     	  ($questionID),
       ($userId),
