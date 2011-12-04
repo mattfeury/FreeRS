@@ -20,6 +20,26 @@
 		echo json_encode($result);
   }
 
+  function listQuizzesWithinProximity($lat, $long, $accuracy, $proximity) {
+		$dbQuery = sprintf("SELECT * FROM quizzes");
+		$result = getDBResultsArray($dbQuery);
+        $quizzes = array();
+        
+        foreach ($result as &$row) {
+            $distance = getDistance($lat, $long, $row["loc_lat"], $row["loc_long"]);
+            if ($distance < $proximity) {
+                $quizzes[] = $row;
+            }
+        }
+		
+		header("Content-type: application/json");
+		echo json_encode($quizzes);
+  }
+
+  function getDistance($lat1, $long1, $lat2, $long2) {
+    return sqrt( pow(($lat1 * $lat2), 2) - pow(($long1 * $long2), 2) );
+  }
+
   function addQuiz($name) {
     $userId = idForCurrentUser();
     
