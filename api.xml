@@ -117,7 +117,7 @@
 	</get>
   </command>
 
-  <command id='answer_rsults' security='public'>
+  <command id='answer_results' security='public'>
 	<description><![CDATA[it's an API, bro]]></description>
     <get>
 		<description><![CDATA[This is how get results for the most recently answered question.]]></description>	
