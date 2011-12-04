@@ -8,19 +8,25 @@
 		echo json_encode($result);
   }
 
+  function cmpDist($a, $b) {
+    if ($a['distance'] == $b['distance']) {
+        return 0;
+    }
+    return ($a['distance'] < $b['distance']) ? -1 : 1;
+  }
   function listQuizzesWithinProximity($lat, $long, $accuracy, $proximity) {
 		$dbQuery = sprintf("SELECT * FROM quizzes WHERE active = 1");
 		$result = getDBResultsArray($dbQuery);
-        $quizzes = array();
-        
-        foreach ($result as $row) {
-            $distance = getDistance($lat, $long, $row["loc_lat"], $row["loc_long"]);
-            if ($distance < $proximity) {
-                $row['distance'] = $distance;
-                $quizzes[] = $row;
-            }
-        }
-		
+    $quizzes = array();
+    
+    foreach ($result as $row) {
+      $distance = getDistance($lat, $long, $row["loc_lat"], $row["loc_long"]);
+      if ($distance < $proximity) {
+        $row['distance'] = $distance;
+        $quizzes[] = $row;
+      }
+    }
+    usort($quizzes, "cmpDist");
 		header("Content-type: application/json");
 		echo json_encode($quizzes);
   }
