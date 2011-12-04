@@ -70,4 +70,16 @@ function getDBResultInserted($dbQuery,$id){
 		die(mysql_error());
 	}
 }
+
+// helper
+function idForCurrentUser() {
+	global $_USER;
+
+	if (! isset($_USER['uid'])) {
+		$GLOBALS["_PLATFORM"]->sandboxHeader("HTTP/1.1 500 Internal Server Error");
+	  	die();
+	}
+
+	return $_USER['uid'];
+}
 ?>

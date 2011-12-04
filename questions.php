@@ -20,4 +20,15 @@
     }
   }
 
+  function answerQuestion($questionID, $answer) {
+    $userId = idForCurrentUser();
+    	$dbQuery = sprintf("INSERT INTO answers (question_id, user_id, answer) VALUES (%d, %d, %d)",
+    	  ($questionID),
+      ($userId),
+      ($answer));
+    	$result = getDBResultInserted($dbQuery, 'id');
+    	header("Content-type: application/json");
+    	echo json_encode($result); 
+  }
+
 ?>
