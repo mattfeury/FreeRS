@@ -1,18 +1,6 @@
 <?php
 	include 'db_helper.php';
 
-  // helper
-  function idForCurrentUser() {
-    global $_USER;
-
-    if (! isset($_USER['uid'])) {
-  		$GLOBALS["_PLATFORM"]->sandboxHeader("HTTP/1.1 500 Internal Server Error");
-	  	die();
-    }
-
-    return $_USER['uid'];
-  }
-
 	function listQuizzes() {
 		$dbQuery = sprintf("SELECT * FROM quizzes");
 		$result = getDBResultsArray($dbQuery);
