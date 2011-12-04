@@ -42,6 +42,7 @@ function createQuiz(quizName, lat, long, accuracy, callback) {
     dataType: "json",
     async: false,
     data: { name: quizName, lat: lat, long: long, accuracy: accuracy },
+    headers: {'X-HTTP-Method-Override': 'PUT'},
     type: 'POST',
     success: function(data) {
       currentQuizId = data.quizId;
@@ -60,7 +61,6 @@ function addQuestion(quizId, numChoices, answer, start) {
     dataType: "json",
     async: false,
     data: { 'quizID': quizId, 'numChoices': numChoices, 'correctChoice': answer },
-    headers: {'X-HTTP-Method-Override': 'PUT'},
     type: 'POST',
     success: function(data) {
       $('#quiz')
