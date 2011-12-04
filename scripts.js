@@ -1,41 +1,6 @@
 /**
  * Ajax functions for loading things from the API and setting the appropriate templates
  */
-
-function loadCategoriesIfNeeded() {
-
-  $.ajax({
-    url: "api/categories",
-    dataType: "json",
-    async: false,
-    success: function(data) {
-      categoriesLoaded = true;
-
-      // template on create product page
-      $( "#category_option_template" ).tmpl( data ).appendTo( ".add_product_categories" );
-      // template on list categories page
-      $( "#category_list_row_template" ).tmpl( data ).appendTo( "#categories_list" );
-    },
-    error: ajaxError
-  });
-}
-
-// Loads all the products for the user
-function loadUserProducts() {
-  $( "#products_list" ).empty();
-  $.ajax({
-    url: "api/user_product",
-    dataType: "json",
-    async: false,
-    success: function(data) {
-      //Create The New Rows From Template
-      addProducts(data);      
-      $( "#product_list_row_template" ).tmpl( data ).appendTo( "#products_list" );
-      $('#products_list').listview('refresh');
-    },
-    error: function() { showError('No Products','You have not posted any products up!'); }
-  });
-}
 function createQuiz(quizName, lat, long, accuracy, callback) {
   $.ajax({
     url: "api/quizzes",
@@ -152,11 +117,25 @@ function getQuizzesNear(lat, long, accuracy) {
     data: { 'lat': lat, 'long': long, 'accuracy': accuracy },
     type: 'POST',
     success: function(data) {
-      console.log(data);
+      $('#quizzes').empty();
       $.each(data || [], function(i, item) {
         $( "#quiz-template" ).tmpl( item ).appendTo( "#quizzes" );
       });
       $.mobile.changePage('#quiz_list_page');
+      $('#quiz_list_page').trigger('create');
+    },
+    error: ajaxError
+  });
+}
+function sendAnswer(answer) {
+  $.ajax({
+    url: "api/answers",
+    dataType: "json",
+    async: false,
+    data: { 'quizID': currentQuizId, 'answer': answer },
+    type: 'POST',
+    success: function(data) {
+      alert('Submitted');
     },
     error: ajaxError
   });
@@ -191,7 +170,19 @@ $(function() {
     .delegate('button.less-time', 'click', function() {
       var seconds = $('#quiz .time').attr('data-seconds');
       updateTimer(parseInt(seconds) - 15);      
-    })
+    });
+
+  $('#quizzes')
+    .delegate('.quiz button', 'click', function() {
+      currentQuizId = $(this).attr('data-id');
+      $.mobile.changePage('#take_quiz_page');
+    });
+
+  $('#remote')
+    .delegate('button[data-answer]', 'click', function() {
+      var answer = $(this).attr('data-answer');
+      sendAnswer(answer);
+    });
 
 
   $('#add_question_page').bind('pagebeforeshow',function(event, ui){
@@ -204,12 +195,17 @@ $(function() {
   //
   // This'll help when people "refresh" or go directly to a page. Since we
   // have to do tricky things with user's state, we need them to go through the flow
-  $('.needs-state').bind('pagebeforeshow',function(event, ui){
+  $('.needs-quiz').bind('pagebeforeshow',function(event, ui){
     if (! currentQuizId)
       $.mobile.changePage('#landing_page');      
   });
+  $('.needs-location').bind('pagebeforeshow',function(event, ui){
+    if (! position) {
+      getLocation();
+      $.mobile.changePage('#landing_page');
+    }
+  });
 
-  
   // Before viewing the Professor's give quiz page, reset default values
 	$('#give_quiz_page').bind('pagebeforeshow', function() {
     $('#give_quiz_page')

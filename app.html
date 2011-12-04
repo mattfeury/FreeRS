@@ -11,7 +11,7 @@
 	</div>
 </div>
 <!--******************************************************************************************************************************-->
-<div class="needs-state" data-role="page" id="quiz_view_page">
+<div class="needs-quiz" data-role="page" id="quiz_view_page">
   <div data-role='header' data-position='inline' data-theme='d'>
     <h1 class="quiz-name">Quiz View</h1>
   </div>
@@ -25,7 +25,7 @@
 	</div>
 </div>
 <!--******************************************************************************************************************************-->
-<div class="needs-state" data-role="page" id="give_quiz_page">
+<div class="needs-quiz" data-role="page" id="give_quiz_page">
   <div data-role='header' data-position='inline' data-theme='d'>
 	  <h1>Quiz</h1>
   </div>
@@ -47,7 +47,7 @@
 	</div>
 </div>
 <!--******************************************************************************************************************************-->
-<div class="needs-state" data-role="page" id="add_question_page">
+<div class="needs-quiz" data-role="page" id="add_question_page">
   <div data-role='header' data-position='inline' data-theme='d'>
 	  <h1>Add Question</h1>
   </div>
@@ -75,32 +75,30 @@
 	</div>
 </div>
 <!--******************************************************************************************************************************-->
-<div data-role="page" id="quiz_list_page">
+<div class="needs-location" data-role="page" id="quiz_list_page">
 	<div data-role="header" data-position="inline" data-theme='d'>
 		<a href="#landing_page" data-direction="reverse" data-icon="back" data-theme="d" data-iconpos="notext">Cancel</a>
     <h1 class='head_title'>Take Quiz</h1>
   </div>
 	<div data-role="content">
     <script id="quiz-template" type="text/x-jquery-tmpl">
-      <li class="quiz"><button>${name}</button></li>
+      <li class="quiz"><button data-id="${id}">${name} by ${user_id}</button></li>
     </script>
     <ul id="quizzes"></ul>
 	</div>
 </div>
 <!--******************************************************************************************************************************-->
-<div class="needs-state" data-role="page" id="take_quiz_page">
+<div class="needs-quiz" data-role="page" id="take_quiz_page">
 	<div data-role="header" data-position="inline" data-theme='d'>
-		<a href="#landing_page" data-direction="reverse" data-icon="back" data-theme="d" data-iconpos="notext">Cancel</a>
+		<a href="#quiz_list_page" data-direction="reverse" data-icon="back" data-theme="d" data-iconpos="notext">Back</a>
     <h1 class='head_title'>Taking Quiz</h1>
   </div>
-  <div data-role="content">
+  <div id="remote" data-role="content">
     <button data-answer="0">A</button>
     <button data-answer="1">B</button>
     <button data-answer="2">C</button>
     <button data-answer="3">D</button>
     <button data-answer="4">E</button>
-
-    <button id="send-answer">submit</button>
 	</div>
 </div>
 <!--******************************************************************************************************************************-->
