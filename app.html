@@ -7,6 +7,7 @@
     <div data-role="controlgroup">
         <button id="take-quiz" data-role="button" data-transition="slide">Take Quiz</button>
         <button id="make-quiz" data-role="button" data-transition="slide">Make Quiz</button>
+        <a href='#my_quiz_page' data-role="button" data-transition="slide">Past Quizzes</a>
     </div>
 	</div>
 </div>
@@ -98,6 +99,31 @@
 	</div>
 </div>
 <!--******************************************************************************************************************************-->
+<div class="needs-location" data-role="page" id="my_quiz_page">
+	<div data-role="header" data-position="inline" data-theme='d'>
+		<a href="#landing_page" data-direction="reverse" data-icon="back" data-theme="d" data-iconpos="notext">Cancel</a>
+    <h1 class='head_title'>My Quizzes</h1>
+  </div>
+	<div data-role="content">
+    <ul id="my-quizzes"></ul>
+	</div>
+</div>
+<!--******************************************************************************************************************************-->
+<div class="needs-location" data-role="page" id="quiz_stats_page">
+	<div data-role="header" data-position="inline" data-theme='d'>
+		<a href="#landing_page" data-direction="reverse" data-icon="back" data-theme="d" data-iconpos="notext">Cancel</a>
+    <h1 class='head_title'>Quiz Stats</h1>
+  </div>
+  <div data-role="content">
+    <script id="question-button-template" type="text/x-jquery-tmpl">
+      <li class="question"><button>Question #${id}</button></li>
+    </script>
+    
+    <ol id="question-stats"></ol>
+    <!--<ol id="answerer-stats"></ol>-->
+	</div>
+</div>
+<!--******************************************************************************************************************************-->
 <div class="needs-quiz" data-role="page" id="take_quiz_page">
 	<div data-role="header" data-position="inline" data-theme='d'>
 		<a href="#quiz_list_page" data-direction="reverse" data-icon="back" data-theme="d" data-iconpos="notext">Back</a>
@@ -112,9 +138,8 @@
 	</div>
 </div>
 <!--******************************************************************************************************************************-->
-<div class="needs-quiz" data-role="page" id="bar_graph_page">
+<div class="needs-location" data-role="page" id="bar_graph_page">
 	<div data-role="header" data-position="inline" data-theme='d'>
-		<a href="#give_quiz_page" data-direction="reverse" data-icon="back" data-theme="d" data-iconpos="notext">Back</a>
     <h1 class='head_title'>Stats</h1>
   </div>
   <div id="bar_graph" data-role="content">
@@ -125,7 +150,7 @@
     <ol id="choices">
     </ol>
 
-    <a href='#add_question_page' data-role="button" data-transition="slide">Add Question</a>
+    <a href='#add_question_page' data-role="button" data-transition="slide">Add Question & Start</a>
 	</div>
 </div>
 <!--******************************************************************************************************************************-->

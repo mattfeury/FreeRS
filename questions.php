@@ -91,7 +91,7 @@
     
     foreach ($result as $row) {
       $qResult = fetchQuestionResults($row['id'], false);
-      $qResult = array_merge(getQuestion($row['id']), array("results" => $qResult));
+      $qResult = array_merge(getQuestion($row['id']), array("answers" => $qResult));
       $questionResults[] = $qResult;
     }
 

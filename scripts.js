@@ -136,6 +136,86 @@ function getQuizzesNear(lat, long, accuracy) {
     error: ajaxError
   });
 }
+function getMyQuizzes() {
+  $.mobile.showPageLoadingMsg();
+  $.ajax({
+    url: "api/quizzes",
+    dataType: "json",
+    async: false,
+    type: 'GET',
+    success: function(data) {
+      $.mobile.hidePageLoadingMsg();
+      $('#my-quizzes').empty();
+      $.each(data || [], function(i, item) {
+        $( "#quiz-template" ).tmpl( item ).appendTo( "#my-quizzes" );
+      });
+      $('#my_quiz_page').trigger('create');
+    },
+    error: ajaxError
+  });
+}
+function getAndRenderQuizStats(quizId) {
+  $.mobile.showPageLoadingMsg();
+  $.ajax({
+    url: "api/answer_results/" + quizId,
+    dataType: "json",
+    async: false,
+    type: 'GET',
+    success: function(data) {
+      $.mobile.hidePageLoadingMsg();
+
+      $('#question-stats').empty();
+      $.each(data || [], function(i, item) {
+        var $li = $( "#question-button-template" ).tmpl({ id: i+1 });
+        $li.find('button').click(function() {
+          //render stats
+          console.log(item);
+          renderAndViewQuestionStats(item);
+        });
+        $li.appendTo( "#question-stats" );
+      });
+      $('#quiz_stats_page').trigger('create');
+      
+      $.mobile.changePage('#quiz_stats_page');
+    },
+    error: ajaxError
+  });
+}
+function renderAndViewQuestionStats(data) {
+  var numChoices = data['num_choices'] || 0,
+      correct = data['correct_choice'] || 0,
+      answers = data.answers || [];
+
+  $('#choices').empty();
+  for(var i=0; i<numChoices; i++) {
+    var $li = $('#choice-template').tmpl({ answer: i, answerChar: alphaChars.charAt(i) });
+    if (i == correct)
+      $li.addClass('correct');
+
+    $li.appendTo( "#choices" );
+  }
+
+  var maxCount = 0;
+  $.each(answers ,function(i, answer) {
+    var $li = $('#choices .choice[data-answer="'+answer.answer+'"]');
+    if (answer.count > maxCount)
+      maxCount = answer.count;
+
+    $li
+      .find('.bar')
+        .attr('data-count', answer.count)
+      .end()
+      .find('.count')
+        .text(answer.count);
+  });
+  $('#choices .choice').each(function(i, item) {
+    var $bar = $(this).find('.bar'),
+        count = $bar.attr('data-count');
+    $bar
+      .css('width', ((parseInt(count) / maxCount * 100) || 0) + '%')
+  });
+  $.mobile.changePage('#bar_graph_page');
+}
 function sendAnswer(answer) {
   $.mobile.showPageLoadingMsg();
   $.ajax({
@@ -166,40 +246,7 @@ function showAnswerResultsForCurrentQuestion() {
     success: function(data) {
       $.mobile.hidePageLoadingMsg();
 
-      var numChoices = data['num_choices'] || 0,
-          correct = data['correct_choice'] || 0,
-          answers = data.answers || [];
-
-      $('#choices').empty();
-      for(var i=0; i<numChoices; i++) {
-        var $li = $('#choice-template').tmpl({ answer: i, answerChar: alphaChars.charAt(i) });
-        if (i == correct)
-          $li.addClass('correct');
-
-        $li.appendTo( "#choices" );
-      }
-
-      var maxCount = 0;
-      $.each(answers ,function(i, answer) {
-        var $li = $('#choices .choice[data-answer="'+answer.answer+'"]');
-        if (answer.count > maxCount)
-          maxCount = answer.count;
-
-        $li
-          .find('.bar')
-            .attr('data-count', answer.count)
-          .end()
-          .find('.count')
-            .text(answer.count);
-      });
-      $('#choices .choice').each(function(i, item) {
-        var $bar = $(this).find('.bar'),
-            count = $bar.attr('data-count');
-        $bar
-          .css('width', ((parseInt(count) / maxCount * 100) || 0) + '%')
-      });
-      //TODO style bars
-      $.mobile.changePage('#bar_graph_page');
+      renderAndViewQuestionStats(data);
     },
     error: ajaxError
   });
@@ -242,6 +289,12 @@ $(function() {
       currentQuizId = $(this).attr('data-id');
       $.mobile.changePage('#take_quiz_page');
     });
+  $('#my-quizzes')
+    .delegate('.quiz button', 'click', function() {
+      var qId = $(this).attr('data-id');
+      getAndRenderQuizStats(qId);
+    });
+  
 
   $('#remote')
     .delegate('button[data-answer]', 'click', function() {
@@ -280,6 +333,10 @@ $(function() {
       .end()
       .find('.question')
         .text(currentQuestionNum);
+	});
+  // Get a list of this user's quizzes
+  $('#my_quiz_page').bind('pagebeforeshow', function() {
+    getMyQuizzes();
 	});
 
   // Get a name and location and create the quiz.
