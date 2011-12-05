@@ -111,6 +111,9 @@ function updateTimer(newTime) {
     $quiz.addClass('paused').removeClass('playing');
     clearTimeout(tickerInterval);
     deactivateQuiz();
+    if ($('#results-slider').val() === 'on') {
+      showAnswerResultsForCurrentQuestion();
+    }
   }
 }
 function getQuizzesNear(lat, long, accuracy) {
@@ -148,7 +151,60 @@ function sendAnswer(answer) {
     error: ajaxError
   });
 }
+var alphaChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+function showAnswerResultsForCurrentQuestion() {
+  if (! currentQuizId) return false;
+  
+  $.mobile.showPageLoadingMsg();
 
+  $.ajax({
+    url: "api/answer_results/" + currentQuizId,
+    dataType: "json",
+    async: false,
+    data: { 'quizID': currentQuizId },
+    type: 'GET',
+    success: function(data) {
+      $.mobile.hidePageLoadingMsg();
+
+      var numChoices = data['num_choices'] || 0,
+          correct = data['correct_choice'] || 0,
+          answers = data.answers || [];
+
+      $('#choices').empty();
+      for(var i=0; i<numChoices; i++) {
+        var $li = $('#choice-template').tmpl({ answer: i, answerChar: alphaChars.charAt(i) });
+        if (i == correct)
+          $li.addClass('correct');
+
+        $li.appendTo( "#choices" );
+      }
+
+      var maxCount = 0;
+      $.each(answers ,function(i, answer) {
+        var $li = $('#choices .choice[data-answer="'+answer.answer+'"]');
+        if (answer.count > maxCount)
+          maxCount = answer.count;
+
+        $li
+          .find('.bar')
+            .attr('data-count', answer.count)
+          .end()
+          .find('.count')
+            .text(answer.count);
+      });
+      $('#choices .choice').each(function(i, item) {
+        var $bar = $(this).find('.bar'),
+            count = $bar.attr('data-count');
+        $bar
+          .css('width', ((parseInt(count) / maxCount * 100) || 0) + '%')
+      });
+      //TODO style bars
+      $.mobile.changePage('#bar_graph_page');
+    },
+    error: ajaxError
+  });
+
+}
 
 window.currentUser = null;
 window.currentQuizId = null;
@@ -277,7 +333,7 @@ $(function() {
         start = $this.attr('data-start');
 
     if (currentQuizId && numChoices && answer)
-      addQuestion(currentQuizId, numChoices, answer, start);
+      addQuestion(currentQuizId, numChoices, answer-1, start); //0 index the answer
     else
       showError('Error', 'You must select a number of choices and answer');
   });

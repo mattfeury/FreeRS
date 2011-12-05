@@ -2,3 +2,23 @@
 
 #quiz.playing .play, #quiz.paused .pause { display: none; }
 #quiz.paused .play, #quiz.playing .pause { display: block; }
+
+.choice {
+margin: 15px;
+position: relative;
+padding: 15px 0;
+border: 3px solid #aa0000;
+font-weight: bold;
+}
+.choice .bar {
+position: absolute;
+background: #ffaaaa;
+top: 0;
+bottom: 0;
+}
+.choice.correct { border-color: green; }
+.choice.correct .bar { background: #aaffaa; }
+.choice .label {
+  position: relative;
+  padding: 0 15px;
+}
