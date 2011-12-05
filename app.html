@@ -87,8 +87,9 @@
   </div>
 	<div data-role="content">
     <script id="quiz-template" type="text/x-jquery-tmpl">
-      <li class="quiz"><button data-id="${id}">${name} by ${user_id}</button></li>
+      <li class="quiz"><button data-id="${id}" data-theme="${active == '1' ? 'b' :'c'}">${name} by ${user_id}</button></li>
     </script>
+    <h3>Quizzes colored blue are currently active</h3>
     <ul id="quizzes"></ul>
 	</div>
 </div>
