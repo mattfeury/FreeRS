@@ -3,8 +3,8 @@
 
 	function listQuizzes() {
     $userId = idForCurrentUser();
-		$dbQuery = sprintf("SELECT * FROM quizzes WHERE user_id='%s'",
-		  ($userId)
+		$dbQuery = sprintf("SELECT * FROM quizzes WHERE user_id='%s' ORDER BY id DESC",
+		  mysql_real_escape_string($userId)
 		  );
 		$result = getDBResultsArray($dbQuery);
 		header("Content-type: application/json");
