@@ -81,13 +81,35 @@
     return getQuestionResults($questionID);
   }
 
+  function getAllQuestionResutsForQuiz($quizID) {
+    $dbQuery = sprintf("SELECT id FROM questions WHERE quiz_id=%d",
+      ($quizID)
+      );
+
+		$result = getDBResultsArray($dbQuery);
+    $questionResults = array();
+    
+    foreach ($result as $row) {
+      $qResult = fetchQuestionResults($row['id']);
+      $qResult = array_merge(getQuestion($row['id']), array("answers" => $result));
+      $result[] = $qResult;
+    }
+    
+    header("Content-type: application/json");
+    echo json_encode($result);     
+  }
+
   function getQuestionResults($questionID) {
-    $dbQuery = sprintf("SELECT answer, COUNT(*) as count FROM answers WHERE question_id=%d GROUP BY answer",
-      ($questionID));
-    $result = getDBResultsArray($dbQuery);
+    $result = fetchQuestionResults($questionID);
     $result = array_merge(getQuestion($questionID), array("answers" => $result));
     header("Content-type: application/json");
     echo json_encode($result); 
+  }
+
+  function fetchQuestionResults($questionID) {
+      $dbQuery = sprintf("SELECT answer, COUNT(*) as count FROM answers WHERE question_id=%d GROUP BY answer",
+      ($questionID));
+      return getDBResultsArray($dbQuery);
   }
 
 ?>
