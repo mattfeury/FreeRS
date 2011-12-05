@@ -330,8 +330,6 @@ $(function() {
       var qId = $(this).attr('data-id');
       getAndRenderQuizStats(qId);
     });
-  
-
   $('#remote')
     .delegate('button[data-answer]', 'click', function() {
       var answer = $(this).attr('data-answer');

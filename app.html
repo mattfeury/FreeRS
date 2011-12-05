@@ -20,10 +20,12 @@
 	
   <div data-role="content">
     <div id="quiz">
-      <h2 class="question">1</h2>
-      <div><span class="time" data-seconds="30">30</span> <span class="noun">second</span> remaining</div>
-      <button class="more-time">+30</button>
-      <button class="less-time">-15</button>
+      <h2 class="question" style="display: none;">1</h2>
+      <h3><span class="time" data-seconds="30">30</span> <span class="noun">second</span> remaining</h3>
+      <div data-role="controlgroup" data-type="horizontal">
+        <button class="more-time">+30</button>
+        <button class="less-time">-15</button>
+      </div>
       <div class="play">
         <button class="play">Play</button>
       </div>
