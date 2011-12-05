@@ -2,7 +2,10 @@
 	include 'db_helper.php';
 
 	function listQuizzes() {
-		$dbQuery = sprintf("SELECT * FROM quizzes");
+    $userId = idForCurrentUser();
+		$dbQuery = sprintf("SELECT * FROM quizzes WHERE user_id='%s'",
+		  ($userId)
+		  );
 		$result = getDBResultsArray($dbQuery);
 		header("Content-type: application/json");
 		echo json_encode($result);
