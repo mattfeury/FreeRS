@@ -148,6 +148,19 @@
 	</get>
   </command>
 
+  <command id='quiz_results' security='public'>
+	<description><![CDATA[it's an API, bro]]></description>
+    <get>
+		<description><![CDATA[This is how to get results for current question in a given quiz]]></description>	
+		<action file='questions.php'><![CDATA[getQuestionResultsForQuiz($_REST['quiz_results']);]]></action>			
+			<param id='quizID'>
+				<description><![CDATA[Quiz ID]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA[1]]></exampleValue>
+			</param>		
+	</get>
+  </command>
+
   <command id='user_results' security='public'>
 	<description><![CDATA[it's an API, bro]]></description>
     <post>

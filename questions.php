@@ -72,13 +72,12 @@
 
   function getQuestionResultsForQuiz($quizID) {
     $questionID = getCurrentQuestionforQuiz($quizID, false);
-
-    if ($questionID == -1) {
-      echo json_encode(array('success'=> false));
-      return;
-    }
     
-    return getQuestionResults($questionID);
+    header("Content-type: application/json");
+
+    $result = fetchQuestionResults($questionID, false);
+    $result = array_merge(getQuestion($questionID), array("answers" => $result));
+    echo json_encode($result);
   }
 
   /**

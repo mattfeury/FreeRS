@@ -249,7 +249,7 @@ function showAnswerResultsForCurrentQuestion() {
   $.mobile.showPageLoadingMsg();
 
   $.ajax({
-    url: "api/answer_results/" + currentQuizId,
+    url: "api/quiz_results/" + currentQuizId,
     dataType: "json",
     async: false,
     data: { 'quizID': currentQuizId },
@@ -257,7 +257,7 @@ function showAnswerResultsForCurrentQuestion() {
     success: function(data) {
       $.mobile.hidePageLoadingMsg();
 
-      renderAndViewQuestionStats(data['questions']);
+      renderAndViewQuestionStats(data);
     },
     error: ajaxError
   });
