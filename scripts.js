@@ -89,7 +89,9 @@ function getQuizzesNear(lat, long, accuracy) {
       $.mobile.changePage('#quiz_list_page');
       $('#quiz_list_page').trigger('create');
     },
-    error: ajaxError
+    error: function() {
+      showError('No quizzes found', 'There are no quizzes made today within your vicinity');
+    }
   });
 }
 function getMyQuizzes() {
@@ -236,7 +238,10 @@ function sendAnswer(answer) {
       $.mobile.hidePageLoadingMsg();
       alert('Submitted');
     },
-    error: ajaxError
+    error: function() {
+      $.mobile.hidePageLoadingMsg();
+      showError('Error', 'There is no active question in this quiz. Or you have not picked a quiz');
+    }
   });
 }
 var alphaChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
