@@ -1,6 +1,8 @@
 /**
  * Ajax functions for loading things from the API and setting the appropriate templates
  */
+
+// QUIZ functions
 function createQuiz(quizName, lat, long, accuracy, callback) {
   $.mobile.showPageLoadingMsg();
   $.ajax({
@@ -18,30 +20,6 @@ function createQuiz(quizName, lat, long, accuracy, callback) {
         .find('.stat-holder').empty();
 
       callback();
-    },
-    error: ajaxError
-  });
-}
-function addQuestion(quizId, numChoices, answer, start) {
-  $.mobile.showPageLoadingMsg();
-  $.ajax({
-    url: "api/questions",
-    dataType: "json",
-    async: false,
-    data: { 'quizID': quizId, 'numChoices': numChoices, 'correctChoice': answer },
-    type: 'POST',
-    success: function(data) {
-      $.mobile.hidePageLoadingMsg();
-      $('#quiz')
-        .find('.question').text(++currentQuestionNum)
-        .find('.time')
-          .attr('data-seconds', defaultTimePerQuestion)
-          .text('0:' + defaultTimePerQuestion);
-
-      if (start)
-        activateQuiz();
-
-      $.mobile.changePage('#give_quiz_page');
     },
     error: ajaxError
   });
@@ -97,25 +75,6 @@ function deactivateQuiz() {
     error: ajaxError
   });
 }
-function updateTimer(newTime) {
-  var $quiz = $('#quiz');
-
-  $quiz
-    .find('.time')
-      .attr('data-seconds', newTime)
-      .text((newTime < 0) ? 0 : newTime)
-      .siblings('.noun')
-        .text('second'.pluralize(newTime));
-
-  if (newTime <= 0) {
-    $quiz.addClass('paused').removeClass('playing');
-    clearTimeout(tickerInterval);
-    deactivateQuiz();
-    if ($('#results-slider').val() === 'on') {
-      showAnswerResultsForCurrentQuestion();
-    }
-  }
-}
 function getQuizzesNear(lat, long, accuracy) {
   $.mobile.showPageLoadingMsg();
   $.ajax({
@@ -169,7 +128,6 @@ function getAndRenderQuizStats(quizId) {
         var $li = $( "#question-button-template" ).tmpl({ id: i+1 });
         $li.find('button').click(function() {
           //render stats
-          console.log(item);
           renderAndViewQuestionStats(item);
         });
         $li.appendTo( "#question-stats" );
@@ -177,6 +135,32 @@ function getAndRenderQuizStats(quizId) {
       $('#quiz_stats_page').trigger('create');
       
       $.mobile.changePage('#quiz_stats_page');
+    },
+    error: ajaxError
+  });
+}
+
+// QUESTION functions
+function addQuestion(quizId, numChoices, answer, start) {
+  $.mobile.showPageLoadingMsg();
+  $.ajax({
+    url: "api/questions",
+    dataType: "json",
+    async: false,
+    data: { 'quizID': quizId, 'numChoices': numChoices, 'correctChoice': answer },
+    type: 'POST',
+    success: function(data) {
+      $.mobile.hidePageLoadingMsg();
+      $('#quiz')
+        .find('.question').text(++currentQuestionNum)
+        .find('.time')
+          .attr('data-seconds', defaultTimePerQuestion)
+          .text('0:' + defaultTimePerQuestion);
+
+      if (start)
+        activateQuiz();
+
+      $.mobile.changePage('#give_quiz_page');
     },
     error: ajaxError
   });
@@ -216,6 +200,8 @@ function renderAndViewQuestionStats(data) {
   });
   $.mobile.changePage('#bar_graph_page');
 }
+
+// ANSWER functions
 function sendAnswer(answer) {
   $.mobile.showPageLoadingMsg();
   $.ajax({
@@ -253,6 +239,34 @@ function showAnswerResultsForCurrentQuestion() {
 
 }
 
+// UTILITY functions
+function updateTimer(newTime) {
+  var $quiz = $('#quiz');
+
+  $quiz
+    .find('.time')
+      .attr('data-seconds', newTime)
+      .text((newTime < 0) ? 0 : newTime)
+      .siblings('.noun')
+        .text('second'.pluralize(newTime));
+
+  if (newTime <= 0) {
+    $quiz.addClass('paused').removeClass('playing');
+    clearTimeout(tickerInterval);
+    deactivateQuiz();
+    if ($('#results-slider').val() === 'on') {
+      showAnswerResultsForCurrentQuestion();
+    }
+  }
+}
+String.prototype.pluralize = function(count, plural) {
+  if (! plural)
+    plural = this + 's';
+
+  return (count == 1 ? this : plural).toString()
+}
+
+// GLOBALS
 window.currentUser = null;
 window.currentQuizId = null;
 window.currentQuestionNum = 0;
@@ -412,14 +426,4 @@ function showError(name, description) {
 		changeHash: false
 	});
 
-}
-
-/**
- * Pluralize helper function for strings
- */
-String.prototype.pluralize = function(count, plural) {
-  if (! plural)
-    plural = this + 's';
-
-  return (count == 1 ? this : plural).toString()
 }
