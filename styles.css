@@ -27,3 +27,5 @@ bottom: 0;
 .question .incorrect { display: inline-block; color: red; font-weight: bold; }
 .question.correct .correct { display: inline-block; }
 .question.correct .incorrect { display: none; }
+
+#logo { max-width: 100%; display: block; height: 100px; margin: auto; }

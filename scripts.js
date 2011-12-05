@@ -335,6 +335,11 @@ $(function() {
       var answer = $(this).attr('data-answer');
       sendAnswer(answer);
     });
+  $('.finish-quiz').click(function() {
+    deactivateQuiz();
+    currentQuizId = null;
+    $.mobile.changePage('#landing_page');    
+  });
 
 
   $('#add_question_page').bind('pagebeforeshow',function(event, ui){

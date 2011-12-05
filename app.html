@@ -4,6 +4,7 @@
    	</div>
 	
   <div data-role="content">
+    <img src="/developer/aides/widget/freers/logo.png" id="logo" />
     <div data-role="controlgroup">
         <button id="take-quiz" data-role="button" data-transition="slide">Take Quiz</button>
         <button id="make-quiz" data-role="button" data-transition="slide">Make Quiz</button>
@@ -39,8 +40,11 @@
           <option value="off">Off</option>
         </select> 
       </div>
-      
-      <a href='#add_question_page' data-role="button" data-transition="slide">Add Question</a>
+
+      <div data-role="controlgroup">
+        <a href='#add_question_page' data-role="button" data-transition="slide">Add Question</a>
+        <button class="finish-quiz" data-start="true">Finish Quiz</button>
+      </div>
     </div>
 	</div>
 </div>
@@ -69,8 +73,10 @@
     <div class="answer" data-role="fieldcontain">
       <label>Answer Number (1-Number of Choices): <input type="password" /></label>
     </div>
-    <!--<button class="add-question">Add</button>-->
-    <button class="add-question" data-start="true">Add &amp; Start</button>
+    <div data-role="controlgroup">
+      <button class="add-question" data-start="true">Add &amp; Start</button>
+      <button class="finish-quiz" data-start="true">Finish Quiz</button>
+    </div>
 	</div>
 </div>
 <!--******************************************************************************************************************************-->
