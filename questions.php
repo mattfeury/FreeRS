@@ -81,7 +81,7 @@
     return getQuestionResults($questionID);
   }
 
-  function getAllQuestionResutsForQuiz($quizID) {
+  function getAllQuestionResultsForQuiz($quizID) {
 		$result =  fetchQuestionsForQuiz($quizID);
     $questionResults = array();
     

@@ -19,10 +19,7 @@
 	
   <div data-role="content">
     <button id="start-quiz" data-role="button" data-transition="slide">Start Quiz</button>
-    <h4>Stats?</h4>
-    <div class="stats">
-      <ol class="stat-holder"></ol>
-    </div>
+    <h4>Stats</h4>
 	</div>
 </div>
 <!--******************************************************************************************************************************-->
@@ -118,9 +115,13 @@
     <script id="question-button-template" type="text/x-jquery-tmpl">
       <li class="question"><button>Question #${id}</button></li>
     </script>
+    <script id="answerer-button-template" type="text/x-jquery-tmpl">
+      <li class="answerer"><button>${id}</answerer></li>
+    </script>
     
     <ol id="question-stats"></ol>
-    <!--<ol id="answerer-stats"></ol>-->
+    <hr/>
+    <ol id="answerer-stats"></ol>
 	</div>
 </div>
 <!--******************************************************************************************************************************-->
@@ -135,6 +136,9 @@
     <button data-answer="2">C</button>
     <button data-answer="3">D</button>
     <button data-answer="4">E</button>
+    <button data-answer="5">F</button>
+    <button data-answer="6">G</button>
+    <button data-answer="7">H</button>
 	</div>
 </div>
 <!--******************************************************************************************************************************-->

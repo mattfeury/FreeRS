@@ -22,6 +22,15 @@
 			
 			<action file='quizzes.php'><![CDATA[listQuizzes();]]></action>
     </index>
+    <get>
+      <description><![CDATA[This is how you get a list of users who have answered a quiz.]]></description>	
+      <action file='quizzes.php'><![CDATA[usersWhoTookQuiz($_REST['quizzes']);]]></action>			
+      <param id='quizId'>
+        <description><![CDATA[Quiz ID]]></description>
+        <defaultValue><![CDATA[]]></defaultValue>
+        <exampleValue><![CDATA[1]]></exampleValue>
+      </param>		
+    </get>    
 		<post>
 			<description><![CDATA[This is how you can get a list of quizzes near you]]></description>
 			<action file='quizzes.php'><![CDATA[listQuizzesWithinProximity($_POST['lat'], $_POST['long'], $_POST['accuracy'], 1000);]]></action>
@@ -129,8 +138,8 @@
   <command id='answer_results' security='public'>
 	<description><![CDATA[it's an API, bro]]></description>
     <get>
-		<description><![CDATA[This is how to get results for the most recently answered question.]]></description>	
-		<action file='questions.php'><![CDATA[getAllQuestionResutsForQuiz($_REST['answer_results']);]]></action>			
+		<description><![CDATA[This is how to get results for the passed quiz id.]]></description>	
+		<action file='questions.php'><![CDATA[getAllQuestionResultsForQuiz($_REST['answer_results']);]]></action>			
 			<param id='quizID'>
 				<description><![CDATA[Quiz ID]]></description>
 				<defaultValue><![CDATA[]]></defaultValue>

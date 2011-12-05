@@ -11,6 +11,14 @@
 		echo json_encode($result);
   }
 
+  function usersWhoTookQuiz($quizId) {
+    $dbQuery = sprintf("SELECT DISTINCT user_id from answers INNER JOIN questions WHERE quiz_id=%d and questions.id = answers.question_id", $quizId);
+    $result = getDBResultsArray($dbQuery, false);
+
+		header("Content-type: application/json");
+		echo json_encode($result);
+  }
+
   function cmpDist($a, $b) {
     if ($a['distance'] == $b['distance']) {
         return 0;
