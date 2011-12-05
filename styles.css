@@ -22,3 +22,8 @@ bottom: 0;
   position: relative;
   padding: 0 15px;
 }
+
+.question .correct { display: none; color: green; font-weight: bold; }
+.question .incorrect { display: inline-block; color: red; font-weight: bold; }
+.question.correct .correct { display: inline-block; }
+.question.correct .incorrect { display: none; }

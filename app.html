@@ -118,10 +118,16 @@
     <script id="answerer-button-template" type="text/x-jquery-tmpl">
       <li class="answerer"><button>${id}</answerer></li>
     </script>
+
+    <div data-role="collapsible" data-collapsed="true">
+      <h3>Stats By Question</h3>
+      <ol id="question-stats"></ol>
+    </div>
+    <div data-role="collapsible" data-collapsed="true">
+      <h3>Stats By Answerer</h3>
+      <ol id="answerer-stats"></ol>
+    </div>
     
-    <ol id="question-stats"></ol>
-    <hr/>
-    <ol id="answerer-stats"></ol>
 	</div>
 </div>
 <!--******************************************************************************************************************************-->
@@ -157,6 +163,21 @@
     <a href='#add_question_page' data-role="button" data-transition="slide">Add Question & Start</a>
 	</div>
 </div>
+<!--******************************************************************************************************************************-->
+<div class="needs-location" data-role="page" id="answerer_stats_page">
+	<div data-role="header" data-position="inline" data-theme='d'>
+    <h1 class='head_title'>Stats by Answerer</h1>
+  </div>
+  <div id="answerer_stats" data-role="content">
+    <script id="questions-template" type="text/x-jquery-tmpl">
+      <li class="question ${(isCorrect) ? 'correct' : ''}">Question #${id} <span class="correct">CORRECT</span><span class="incorrect">INCORRECT</span></li>
+    </script>
+    
+    <ol id="questions">
+    </ol>
+	</div>
+</div>
+
 <!--******************************************************************************************************************************-->
 <div data-role="dialog" id="error_dialog" >
 	<div data-role="header" data-position="inline" data-theme='d'>

@@ -102,7 +102,7 @@
     $answererStats = array();
     $users = usersWhoTookQuiz($quizId);
     foreach ($users as $userId) {
-      $answererStats[] = array($userId['user_id'] => getQuizResultsForUser($quizId, $userId['user_id']));
+      $answererStats[] = array("userId" => $userId['user_id'], "answers" => getQuizResultsForUser($quizId, $userId['user_id']));
     }
 
     header("Content-type: application/json");
@@ -123,7 +123,7 @@
   }
 
   function fetchQuestionsForQuiz($quizID, $error = true) {
-    $dbQuery = sprintf("SELECT id, correct_choice FROM questions WHERE quiz_id=%d",
+    $dbQuery = sprintf("SELECT id, correct_choice FROM questions WHERE quiz_id=%d ORDER BY id ASC",
       ($quizID)
       );
 

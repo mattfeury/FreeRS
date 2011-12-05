@@ -123,8 +123,8 @@ function getAndRenderQuizStats(quizId) {
     success: function(data) {
       $.mobile.hidePageLoadingMsg();
 
-      $('#question-stats').empty();
-      $.each(data || [], function(i, item) {
+      $('#question-stats, #answerer-stats').empty();
+      $.each(data.questions || [], function(i, item) {
         var $li = $( "#question-button-template" ).tmpl({ id: i+1 });
         $li.find('button').click(function() {
           //render stats
@@ -132,6 +132,16 @@ function getAndRenderQuizStats(quizId) {
         });
         $li.appendTo( "#question-stats" );
       });
+      $.each(data.answerers || [], function(i, item) {
+        var $li = $( "#answerer-button-template" ).tmpl({ id: item['userId'] });
+        $li.find('button').click(function() {
+          //render stats
+          renderAndViewAnswererStats(item);
+        });
+        $li.appendTo( "#answerer-stats" );
+      });
+
+
       $('#quiz_stats_page').trigger('create');
       
       $.mobile.changePage('#quiz_stats_page');
@@ -164,6 +174,21 @@ function addQuestion(quizId, numChoices, answer, start) {
     },
     error: ajaxError
   });
+}
+function renderAndViewAnswererStats(data) {
+  var userId = data['num_choices'] || 0,
+      answers = data.answers || [];
+
+  $('#questions').empty();
+  
+  $.each(answers ,function(i, answer) {
+    var $li = $('#questions-template').tmpl({ id: i+1, isCorrect: answer });
+
+    $li.appendTo( "#questions" );
+
+  });
+  $.mobile.changePage('#answerer_stats_page');
+
 }
 function renderAndViewQuestionStats(data) {
   var numChoices = data['num_choices'] || 0,
@@ -232,7 +257,7 @@ function showAnswerResultsForCurrentQuestion() {
     success: function(data) {
       $.mobile.hidePageLoadingMsg();
 
-      renderAndViewQuestionStats(data);
+      renderAndViewQuestionStats(data['questions']);
     },
     error: ajaxError
   });
