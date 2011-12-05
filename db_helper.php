@@ -15,12 +15,16 @@ if(!$connection){
 $db_select = mysql_select_db($db_database);
 if(!$db_select){die("Error with db select.<br/><br/>".mysql_error());}
 
-function getDBResultsArray($dbQuery){
+function getDBResultsArray($dbQuery, $forceError = true){
 	$dbResults=mysql_query($dbQuery);
 
-	if(!$dbResults){
-		$GLOBALS["_PLATFORM"]->sandboxHeader("HTTP/1.1 500 Internal Server Error");
-		die();
+  if(!$dbResults){
+    if ($forceError) {
+  		$GLOBALS["_PLATFORM"]->sandboxHeader("HTTP/1.1 500 Internal Server Error");
+  		die();
+    } else {
+      return array();
+    }
 	}
 	
 	$resultsArray = array();
@@ -28,9 +32,13 @@ function getDBResultsArray($dbQuery){
 		while($row = mysql_fetch_assoc($dbResults)){
 			$resultsArray[] = $row;
 		}	
-	}else{
-		$GLOBALS["_PLATFORM"]->sandboxHeader('HTTP/1.1 404 Not Found');
-		die();
+  }else{
+    if ($forceError) {
+  		$GLOBALS["_PLATFORM"]->sandboxHeader('HTTP/1.1 404 Not Found');
+	  	die();
+    } else {
+      return array();
+    }
 	}
 	
 	return $resultsArray;

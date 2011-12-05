@@ -90,13 +90,13 @@
     $questionResults = array();
     
     foreach ($result as $row) {
-      $qResult = fetchQuestionResults($row['id']);
-      $qResult = array_merge(getQuestion($row['id']), array("answers" => $result));
-      $result[] = $qResult;
+      $qResult = fetchQuestionResults($row['id'], false);
+      $qResult = array_merge(getQuestion($row['id']), array("results" => $qResult));
+      $questionResults[] = $qResult;
     }
-    
+
     header("Content-type: application/json");
-    echo json_encode($result);     
+    echo json_encode($questionResults);
   }
 
   function getQuestionResults($questionID) {
@@ -106,10 +106,10 @@
     echo json_encode($result); 
   }
 
-  function fetchQuestionResults($questionID) {
+  function fetchQuestionResults($questionID, $forceError = true) {
       $dbQuery = sprintf("SELECT answer, COUNT(*) as count FROM answers WHERE question_id=%d GROUP BY answer",
       ($questionID));
-      return getDBResultsArray($dbQuery);
+      return getDBResultsArray($dbQuery, $forceError);
   }
 
 ?>
