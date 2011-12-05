@@ -12,13 +12,17 @@
   }
 
   function cmpDist($a, $b) {
-    if ($a['distance'] == $b['distance']) {
-        return 0;
+    if ($a['active'] == $b['active']) {
+      if ($a['distance'] == $b['distance']) {
+          return $a['created_at'] - $b['created_at'];
+      }
+      return ($a['distance'] < $b['distance']) ? -1 : 1;
     }
-    return ($a['distance'] < $b['distance']) ? -1 : 1;
+    return ($a['active'] < $b['active']) ? 1 : -1;
   }
   function listQuizzesWithinProximity($lat, $long, $accuracy, $proximity) {
-		$dbQuery = sprintf("SELECT * FROM quizzes WHERE active = 1");
+		$dbQuery = sprintf("SELECT * FROM quizzes WHERE `created_at` >= CURRENT_DATE
+  AND `created_at` < CURRENT_DATE + INTERVAL 1 DAY ORDER BY `created_at` DESC");
 		$result = getDBResultsArray($dbQuery);
     $quizzes = array();
     
