@@ -15,9 +15,6 @@ function createQuiz(quizName, lat, long, accuracy, callback) {
     success: function(data) {
       $.mobile.hidePageLoadingMsg();
       currentQuizId = data.quizId;
-      //TODO stats
-      $('#quiz_view_page')
-        .find('.stat-holder').empty();
 
       callback();
     },
@@ -347,6 +344,12 @@ $(function() {
       .find('.answer input')
         .val('');
   });
+  $('#bar_graph_page').bind('pagebeforeshow',function(event, ui){
+    if (currentQuizId != null)
+      $(this).find('#add-q').show();
+    else
+      $(this).find('#add-q').hide();
+  });
   // If we are in app and no current quiz is defined, we cannot render.
   // Bring back to landing.
   //
@@ -390,7 +393,7 @@ $(function() {
         accuracy = position.coords.accuracy;
 
     if (quizName && lat && long) {
-      var callback = function() { $.mobile.changePage('#quiz_view_page'); }
+      var callback = function() { $.mobile.changePage('#add_question_page'); }
       createQuiz(quizName, lat, long, accuracy, callback);
     }
     return false;
