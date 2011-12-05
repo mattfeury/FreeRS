@@ -139,20 +139,7 @@
 	<description><![CDATA[it's an API, bro]]></description>
     <get>
 		<description><![CDATA[This is how to get results for the passed quiz id.]]></description>	
-		<action file='questions.php'><![CDATA[getAllQuestionResultsForQuiz($_REST['answer_results']);]]></action>			
-			<param id='quizID'>
-				<description><![CDATA[Quiz ID]]></description>
-				<defaultValue><![CDATA[]]></defaultValue>
-				<exampleValue><![CDATA[1]]></exampleValue>
-			</param>		
-	</get>
-  </command>
-
-  <command id='quiz_results' security='public'>
-	<description><![CDATA[it's an API, bro]]></description>
-    <get>
-		<description><![CDATA[This is how to get results for all questions in a given quiz]]></description>	
-		<action file='questions.php'><![CDATA[getQuestionResultsForQuiz($_REST['answer_results']);]]></action>			
+		<action file='questions.php'><![CDATA[getAllStatsForQuiz($_REST['answer_results']);]]></action>			
 			<param id='quizID'>
 				<description><![CDATA[Quiz ID]]></description>
 				<defaultValue><![CDATA[]]></defaultValue>
@@ -163,15 +150,20 @@
 
   <command id='user_results' security='public'>
 	<description><![CDATA[it's an API, bro]]></description>
-    <get>
+    <post>
 		<description><![CDATA[This is how to get results for all questions in a given quiz for a single user.]]></description>	
-		<action file='questions.php'><![CDATA[getQuizResultsForUser($_REST['answer_results']);]]></action>			
+		<action file='questions.php'><![CDATA[getQuizResultsForUser($_POST['quizId'], $_POST['userId']);]]></action>			
 			<param id='quizID'>
 				<description><![CDATA[Quiz ID]]></description>
 				<defaultValue><![CDATA[]]></defaultValue>
 				<exampleValue><![CDATA[1]]></exampleValue>
 			</param>		
-	</get>
+			<param id='userId'>
+				<description><![CDATA[User ID]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA[mfeury3]]></exampleValue>
+			</param>		
+	</post>
   </command>
 
   <command id='activate_quiz' security='public'>

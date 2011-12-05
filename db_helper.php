@@ -44,17 +44,25 @@ function getDBResultsArray($dbQuery, $forceError = true){
 	return $resultsArray;
 }
 
-function getDBResultRecord($dbQuery){
+function getDBResultRecord($dbQuery, $forceError = true){
 	$dbResults=mysql_query($dbQuery);
 
-	if(!$dbResults){
-		$GLOBALS["_PLATFORM"]->sandboxHeader("HTTP/1.1 500 Internal Server Error");
-		die();
+  if(!$dbResults){
+    if ($forceError) {
+  		$GLOBALS["_PLATFORM"]->sandboxHeader("HTTP/1.1 500 Internal Server Error");
+  		die();
+    } else {
+      return array();
+    }
 	}
 
 	if(mysql_num_rows($dbResults) != 1){
-		$GLOBALS["_PLATFORM"]->sandboxHeader('HTTP/1.1 404 Not Found');
-		die();
+    if ($forceError) {
+  		$GLOBALS["_PLATFORM"]->sandboxHeader('HTTP/1.1 404 Not Found');
+	  	die();
+    } else {
+      return array();
+    }
 	}
 	return mysql_fetch_assoc($dbResults);
 }

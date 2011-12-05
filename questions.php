@@ -81,8 +81,11 @@
     return getQuestionResults($questionID);
   }
 
+  /**
+   * Returns question info (num choices, correct) and answers (count per answer)
+   */
   function getAllQuestionResultsForQuiz($quizID) {
-		$result =  fetchQuestionsForQuiz($quizID);
+		$result =  fetchQuestionsForQuiz($quizID, false);
     $questionResults = array();
     
     foreach ($result as $row) {
@@ -91,8 +94,19 @@
       $questionResults[] = $qResult;
     }
 
+    return $questionResults;
+  }
+
+  function getAllStatsForQuiz($quizId) {
+    $questionStats = array("questions" => getAllQuestionResultsForQuiz($quizId));
+    $answererStats = array();
+    $users = usersWhoTookQuiz($quizId);
+    foreach ($users as $userId) {
+      $answererStats[] = array($userId['user_id'] => getQuizResultsForUser($quizId, $userId['user_id']));
+    }
+
     header("Content-type: application/json");
-    echo json_encode($questionResults);
+    echo json_encode(array_merge($questionStats, array("answerers" => $answererStats)));
   }
 
   function getQuestionResults($questionID) {
@@ -108,36 +122,41 @@
       return getDBResultsArray($dbQuery, $forceError);
   }
 
-  function fetchQuestionsForQuiz($quizID) {
+  function fetchQuestionsForQuiz($quizID, $error = true) {
     $dbQuery = sprintf("SELECT id, correct_choice FROM questions WHERE quiz_id=%d",
       ($quizID)
       );
 
-		return getDBResultsArray($dbQuery);
+		return getDBResultsArray($dbQuery, $error);
   }
 
-  function getQuizResultsForUser($quizID) {
-    $userId = idForCurrentUser();
-    $questions = fetchQuestionsForQuiz($quizID);
+  function getQuizResultsForUser($quizID, $userId) {
+    $questions = fetchQuestionsForQuiz($quizID, false);
     $results = array();
 
     foreach ($questions as $question) {
       $dbQuery = sprintf("SELECT answer FROM answers WHERE question_id=%d and user_id='%s'",
         ($question['id']),
-        ($userId)
+        mysql_real_escape_string($userId)
         );
         
-      $answer = getDBResultRecord($dbQuery);
+      $answer = getDBResultRecord($dbQuery, false);
       if ($answer['answer'] == $question['correct_choice']) {
         $results[] = true;
-      }
-      else {
+      } else {
         $results[] = false;
       }
 
     }
-    header("Content-type: application/json");
-    echo json_encode($results); 
+
+    return $results;
   }
+  function usersWhoTookQuiz($quizId) {
+    $dbQuery = sprintf("SELECT DISTINCT user_id from answers INNER JOIN questions WHERE quiz_id=%d and questions.id = answers.question_id", $quizId);
+    $result = getDBResultsArray($dbQuery, false);
+
+    return $result;
+  }
+  
 
 ?>
