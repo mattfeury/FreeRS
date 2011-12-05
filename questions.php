@@ -82,11 +82,7 @@
   }
 
   function getAllQuestionResutsForQuiz($quizID) {
-    $dbQuery = sprintf("SELECT id FROM questions WHERE quiz_id=%d",
-      ($quizID)
-      );
-
-		$result = getDBResultsArray($dbQuery);
+		$result =  fetchQuestionsForQuiz($quizID);
     $questionResults = array();
     
     foreach ($result as $row) {
@@ -110,6 +106,38 @@
       $dbQuery = sprintf("SELECT answer, COUNT(*) as count FROM answers WHERE question_id=%d GROUP BY answer",
       ($questionID));
       return getDBResultsArray($dbQuery, $forceError);
+  }
+
+  function fetchQuestionsForQuiz($quizID) {
+    $dbQuery = sprintf("SELECT id, correct_choice FROM questions WHERE quiz_id=%d",
+      ($quizID)
+      );
+
+		return getDBResultsArray($dbQuery);
+  }
+
+  function getQuizResultsForUser($quizID) {
+    $userId = idForCurrentUser();
+    $questions = fetchQuestionsForQuiz($quizID);
+    $results = array();
+
+    foreach ($questions as $question) {
+      $dbQuery = sprintf("SELECT answer FROM answers WHERE question_id=%d and user_id='%s'",
+        ($question['id']),
+        ($userId)
+        );
+        
+      $answer = getDBResultRecord($dbQuery);
+      if ($answer['answer'] == $question['correct_choice']) {
+        $results[] = true;
+      }
+      else {
+        $results[] = false;
+      }
+
+    }
+    header("Content-type: application/json");
+    echo json_encode($results); 
   }
 
 ?>
